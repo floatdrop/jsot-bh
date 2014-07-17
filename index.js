@@ -1,15 +1,20 @@
 var JSOT = require('jsot');
-var jsot = new JSOT();
 
-jsot.match('block', function (context, parent) {
-    var attrs = '';
-    if (parent.attrs) {
-        attrs = ' ';
-        for (var key in parent.attrs) {
-            attrs = key + '="' + parent.attrs[key] + '"';
-        }
-    }
-    return '<' + context + attrs + '>' + jsot.apply(parent.content) + '</' + context + '>';
-});
+var JSOTBH = function JSOTBH () {
+    JSOT.call(this);
+}
 
-module.exports = jsot;
+JSOTBH.prototype = Object.create(JSOT.prototype);
+JSOTBH.prototype.constructor = JSOTBH;
+
+JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
+    return {
+        block: pattern
+    };
+}
+
+JSOTBH.prototype.match = function matchbh(pattern, callback) {
+    JSOT.prototype.match.call(this, this.parsePattern(pattern), callback);
+};
+
+module.exports = JSOTBH;
