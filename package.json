@@ -1,0 +1,39 @@
+{
+  "name": "jsot-bh",
+  "version": "0.0.0",
+  "description": "BH wrapper for JSOT template engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "bench": "matcha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/floatdrop/jsot-bh.git"
+  },
+  "keywords": [
+    "JSON",
+    "JSOT",
+    "BH",
+    "templating"
+  ],
+  "author": "Vsevolod Strukchinsky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/floatdrop/jsot-bh/issues"
+  },
+  "homepage": "https://github.com/floatdrop/jsot-bh",
+  "devDependencies": {
+    "bh": "^2.2.0",
+    "mocha-lcov-reporter": "^0.0.1",
+    "istanbul": "^0.3.0",
+    "coveralls": "^2.7.0",
+    "matcha": "^0.5.0",
+    "mocha": "^1.20.1",
+    "should": "^4.0.4"
+  },
+  "dependencies": {
+    "jsot": "~0.0.7"
+  }
+}
