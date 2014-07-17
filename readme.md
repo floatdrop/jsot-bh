@@ -31,7 +31,18 @@ console.log(
 );
 
 // should output: '<html><p>You</p><p><b>Rock!</b></p></html>'
+```
 
+## Benchmark
+
+```
+                      Simple
+          37,954 op/s » BH
+          94,271 op/s » JSOT-BH
+
+                      Webpage
+          13,879 op/s » BH
+          65,704 op/s » JSOT-BH
 ```
 
 ## API

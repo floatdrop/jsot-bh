@@ -1,20 +1,28 @@
-var JSOT = require('..');
-var jsot = new JSOT();
+var JSOTBH = require('..');
+var jsotbh = new JSOTBH();
 
-jsot.match('block', function (context, parent) {
-    var attrs = '';
-    if (parent.attrs) {
-        attrs = ' ';
-        for (var key in parent.attrs) {
-            attrs = key + '="' + parent.attrs[key] + '"';
+function block() {
+    return function (context) {
+        var attrs = '';
+        if (context.attrs) {
+            attrs = ' ';
+            for (var key in context.attrs) {
+                attrs = key + '="' + context.attrs[key] + '"';
+            }
         }
-    }
-    return '<' + context + attrs + '>' + jsot.apply(parent.content) + '</' + context + '>';
-});
+        return '<' + context.block + attrs + '>' + jsotbh.apply(context.content) + '</' + context.block + '>';
+    };
+}
 
-function noop () {}
+jsotbh.match('html', block('html'));
+jsotbh.match('head', block('head'));
+jsotbh.match('title', block('title'));
+jsotbh.match('body', block('body'));
+jsotbh.match('p', block('p'));
+jsotbh.match('a', block('a'));
+
 var bemjson = require('../benchmark/bemjsons/webpage.js');
 
 for (var i = 0; i < 1000; i++) {
-    jsot.apply(bemjson, noop);
+    jsotbh.apply(bemjson);
 }
