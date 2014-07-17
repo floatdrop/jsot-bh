@@ -37,12 +37,12 @@ console.log(
 
 ```
                       Simple
-          37,954 op/s » BH
-          94,271 op/s » JSOT-BH
+          37,758 op/s » BH
+         132,379 op/s » JSOT-BH
 
                       Webpage
-          13,879 op/s » BH
-          65,704 op/s » JSOT-BH
+          14,254 op/s » BH
+          66,003 op/s » JSOT-BH
 ```
 
 ## API
