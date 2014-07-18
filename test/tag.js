@@ -4,7 +4,7 @@ var JSOTBH = require('..');
 require('should');
 
 describe('context.tag', function () {
-    it('should be set and get tag', function () {
+    it('should set and get tag', function () {
         var jsotbh = new JSOTBH();
 
         jsotbh.match('li', function (context) {

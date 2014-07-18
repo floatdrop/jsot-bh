@@ -14,7 +14,7 @@ Current status:
  * [ ] attrs
  * [ ] bem
  * [ ] cls
- * [ ] content
+ * [x] content
  * [ ] extend
  * [ ] generateId
  * [x] position
