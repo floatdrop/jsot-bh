@@ -6,12 +6,12 @@ var JSOTBH = function JSOTBH () {
 
 JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
-
-JSOTBH.prototype.isMatching = function fastIsMatching(a, b) {
-    if (a.block !== b.block) { return false; }
-
-    return JSOT.prototype.isMatching.call(this, a, b);
-};
+//
+// JSOTBH.prototype.isMatching = function fastIsMatching(a, b) {
+//     if (a.block !== b.block) { return false; }
+//
+//     return JSOT.prototype.isMatching.call(this, a, b);
+// };
 
 JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
     var result = {};
