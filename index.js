@@ -9,21 +9,7 @@ JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
 
 JSOTBH.prototype.attr = function (key, value, force) {
-    this._current.element.attrs = this._current.element.attrs || {};
-
-    if (force) {
-        this._current.element.attrs[key] = value;
-        return this;
-    }
-
-    if (value) {
-        this._current.element.attrs[key] =
-            this._current.element.attrs[key] === undefined ?
-                value : this._current.element.attrs[key];
-        return this;
-    }
-
-    return this._current.element.attrs[key];
+    return this.setPropertyKeyValue('attrs', key, value, force);
 };
 
 JSOTBH.prototype.attrs = function (values, force) {
@@ -37,38 +23,16 @@ JSOTBH.prototype.attrs = function (values, force) {
     return this._current.element.attrs;
 };
 
+JSOTBH.prototype.cls = function (value, force) {
+    return this.setPropertyValue('cls', value, force);
+};
+
 JSOTBH.prototype.content = function (value, force) {
-    if (force) {
-        this._current.element.content = value;
-        return this;
-    }
-
-    if (value) {
-        this._current.element.content =
-            this._current.element.content === undefined ?
-                value :
-                this._current.element.content;
-        return this;
-    }
-
-    return this._current.element.content;
+    return this.setPropertyValue('content', value, force);
 };
 
 JSOTBH.prototype.tag = function (tagName, force) {
-    if (force) {
-        this._current.element.tag = tagName;
-        return this;
-    }
-
-    if (tagName !== undefined) {
-        this._current.element.tag =
-            this._current.element.tag === undefined ?
-                tagName :
-                this._current.element.tag;
-        return this;
-    }
-
-    return this._current.element.tag;
+    return this.setPropertyValue('tag', tagName, force);
 };
 
 JSOTBH.prototype.position = function () {
@@ -113,6 +77,41 @@ JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
 
 JSOTBH.prototype.match = function matchBH(pattern, callback) {
     JSOT.prototype.match.call(this, this.parsePattern(pattern), fast.bind(callback, this, this));
+};
+
+JSOTBH.prototype.setPropertyValue = function setPropertyValue(name, value, force) {
+    if (force) {
+        this._current.element[name] = value;
+        return this;
+    }
+
+    if (value) {
+        this._current.element[name] =
+            this._current.element[name] === undefined ?
+                value :
+                this._current.element[name];
+        return this;
+    }
+
+    return this._current.element[name];
+};
+
+JSOTBH.prototype.setPropertyKeyValue = function setPropertyKeyValue(name, key, value, force) {
+    this._current.element[name] = this._current.element[name] || {};
+
+    if (force) {
+        this._current.element[name][key] = value;
+        return this;
+    }
+
+    if (value) {
+        this._current.element[name][key] =
+            this._current.element[name][key] === undefined ?
+                value : this._current.element[name][key];
+        return this;
+    }
+
+    return this._current.element[name][key];
 };
 
 module.exports = JSOTBH;

@@ -13,7 +13,7 @@ Current status:
  * [x] attr
  * [x] attrs
  * [ ] bem
- * [ ] cls
+ * [x] cls
  * [x] content
  * [ ] extend
  * [ ] generateId
