@@ -1,8 +1,9 @@
 var JSOTBH = require('..');
 var jsotbh = new JSOTBH();
 
-function block() {
+function block(tag) {
     return function (context, json) {
+        context.tag(tag);
         var attrs = '';
         if (json.attrs) {
             attrs = ' ';
@@ -10,7 +11,7 @@ function block() {
                 attrs = key + '="' + json.attrs[key] + '"';
             }
         }
-        return '<' + json.block + attrs + '>' + context.apply(json.content) + '</' + json.block + '>';
+        return '<' + context.tag() + attrs + '>' + context.apply(json.content) + '</' + context.tag() + '>';
     };
 }
 

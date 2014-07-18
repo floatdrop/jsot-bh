@@ -29,7 +29,7 @@ Current status:
  * [ ] param
  * [ ] stop
  * [ ] tParam
- * [ ] tag
+ * [x] tag
 
 ## Usage
 

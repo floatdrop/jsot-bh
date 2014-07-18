@@ -8,6 +8,21 @@ var JSOTBH = function JSOTBH () {
 JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
 
+JSOTBH.prototype.tag = function (tagName, force) {
+    if (force) {
+        this._current.element.tag = tagName;
+        return this;
+    }
+
+    if (tagName !== undefined) {
+        this._current.element.tag =
+            this._current.element.tag === undefined ? tagName : this._current.element.tag;
+        return this;
+    }
+
+    return this._current.element.tag;
+};
+
 JSOTBH.prototype.position = function () {
     return this._current.position;
 };
