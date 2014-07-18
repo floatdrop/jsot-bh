@@ -24,8 +24,8 @@ Current status:
  * [x] js
  * [x] json
  * [ ] mix
- * [ ] mod
- * [ ] mods
+ * [x] mod
+ * [x] mods
  * [ ] param
  * [ ] stop
  * [ ] tParam

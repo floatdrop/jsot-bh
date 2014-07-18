@@ -23,6 +23,21 @@ JSOTBH.prototype.attrs = function (values, force) {
     return this._current.element.attrs;
 };
 
+JSOTBH.prototype.mod = function (key, value, force) {
+    return this.setPropertyKeyValue('mods', key, value, force);
+};
+
+JSOTBH.prototype.mods = function (values, force) {
+    if (values) {
+        for (var key in values) {
+            this.mod(key, values[key], force);
+        }
+        return this;
+    }
+
+    return this._current.element.mods;
+};
+
 JSOTBH.prototype.bem = function (tagName, force) {
     return this.setPropertyValue('bem', tagName, force);
 };
