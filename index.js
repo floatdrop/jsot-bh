@@ -8,6 +8,22 @@ var JSOTBH = function JSOTBH () {
 JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
 
+JSOTBH.prototype.position = function () {
+    return this._current.position;
+};
+
+JSOTBH.prototype.length = function () {
+    return this._current.length;
+};
+
+JSOTBH.prototype.isFirst = function () {
+    return this._current.position === 0;
+};
+
+JSOTBH.prototype.isLast = function () {
+    return this._current.position === this._current.length - 1;
+};
+
 JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
     var result = {};
 

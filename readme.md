@@ -17,8 +17,10 @@ Current status:
  * [ ] content
  * [ ] extend
  * [ ] generateId
- * [ ] isFirst
- * [ ] isLast
+ * [x] position
+ * [x] length
+ * [x] isFirst
+ * [x] isLast
  * [ ] js
  * [ ] json
  * [ ] mix
