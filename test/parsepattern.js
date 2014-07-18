@@ -1,6 +1,6 @@
 /* global describe, it */
 
-var parsePattern = require('..').prototype.parsePattern;
+var parsePattern = require('../utils.js').parseBhIdentifier;
 require('should');
 
 describe('Parse pattern', function () {
