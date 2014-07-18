@@ -26,6 +26,17 @@ JSOTBH.prototype.attr = function (key, value, force) {
     return this._current.element.attrs[key];
 };
 
+JSOTBH.prototype.attrs = function (values, force) {
+    if (values) {
+        for (var key in values) {
+            this.attr(key, values[key], force);
+        }
+        return this;
+    }
+
+    return this._current.element.attrs;
+};
+
 JSOTBH.prototype.content = function (value, force) {
     if (force) {
         this._current.element.content = value;
