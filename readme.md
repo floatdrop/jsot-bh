@@ -62,14 +62,16 @@ console.log(
 
 ## Benchmark
 
+This numbers can be used as "fastest possible" BH performance, but not necessary achivable (`jsot-bh` is lacking some functionality - see API status for details).
+
 ```
                       Simple
-          39,508 op/s » BH
-         133,894 op/s » JSOT-BH
+          39,423 op/s » BH
+         139,328 op/s » JSOT-BH
 
                       Webpage
-          14,324 op/s » BH
-          74,962 op/s » JSOT-BH
+          15,072 op/s » BH
+          53,770 op/s » JSOT-BH
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
