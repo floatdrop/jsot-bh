@@ -8,7 +8,7 @@ Context methods should correspond to [BH](https://github.com/enb-make/bh#%D0%9A%
 
 Current status:
 
- * [ ] apply
+ * [x] apply
  * [ ] applyBase
  * [ ] attr
  * [ ] attrs

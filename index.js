@@ -2,6 +2,10 @@ var JSOT = require('jsot');
 
 var JSOTBH = function JSOTBH () {
     JSOT.call(this);
+
+    this._contextObject = {
+        apply: JSOT.prototype.apply.bind(this)
+    };
 };
 
 JSOTBH.prototype = Object.create(JSOT.prototype);
@@ -31,8 +35,16 @@ JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
     return result;
 };
 
+JSOTBH.prototype.context = function context(bemjson) {
+    this._current = bemjson;
+    return this._contextObject;
+};
+
 JSOTBH.prototype.match = function matchBH(pattern, callback) {
-    JSOT.prototype.match.call(this, this.parsePattern(pattern), callback);
+    var self = this;
+    JSOT.prototype.match.call(this, this.parsePattern(pattern), function (bemjson) {
+        return callback(self.context(bemjson), bemjson);
+    });
 };
 
 module.exports = JSOTBH;

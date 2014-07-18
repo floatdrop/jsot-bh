@@ -2,15 +2,15 @@ var JSOTBH = require('..');
 var jsotbh = new JSOTBH();
 
 function block() {
-    return function (context) {
+    return function (context, json) {
         var attrs = '';
-        if (context.attrs) {
+        if (json.attrs) {
             attrs = ' ';
-            for (var key in context.attrs) {
-                attrs = key + '="' + context.attrs[key] + '"';
+            for (var key in json.attrs) {
+                attrs = key + '="' + json.attrs[key] + '"';
             }
         }
-        return '<' + context.block + attrs + '>' + jsotbh.apply(context.content) + '</' + context.block + '>';
+        return '<' + json.block + attrs + '>' + context.apply(json.content) + '</' + json.block + '>';
     };
 }
 

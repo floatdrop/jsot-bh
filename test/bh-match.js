@@ -3,12 +3,12 @@
 var JSOTBH = require('..');
 require('should');
 
-describe('bh-matchers', function () {
+describe('bh-match', function () {
     it('should match on block', function () {
         var jsotbh = new JSOTBH();
 
-        jsotbh.match('html', function (context) {
-            return '<html>' + jsotbh.apply(context.content) + '</html>';
+        jsotbh.match('html', function (context, json) {
+            return '<html>' + jsotbh.apply(json.content) + '</html>';
         });
 
         jsotbh.apply({
@@ -20,16 +20,16 @@ describe('bh-matchers', function () {
     it('should work', function () {
         var jsotbh = new JSOTBH();
 
-        jsotbh.match('html', function (context) {
-            return '<html>' + jsotbh.apply(context.content) + '</html>';
+        jsotbh.match('html', function (context, json) {
+            return '<html>' + jsotbh.apply(json.content) + '</html>';
         });
 
-        jsotbh.match('p', function (context) {
-            return '<p>' + jsotbh.apply(context.content) + '</p>';
+        jsotbh.match('p', function (context, json) {
+            return '<p>' + jsotbh.apply(json.content) + '</p>';
         });
 
-        jsotbh.match('p_bold_yes', function (context) {
-            return '<p><b>' + jsotbh.apply(context.content) + '</b></p>';
+        jsotbh.match('p_bold_yes', function (context, json) {
+            return '<p><b>' + jsotbh.apply(json.content) + '</b></p>';
         });
 
         jsotbh.apply({
