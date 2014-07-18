@@ -23,6 +23,6 @@ jsotbh.match('a', block('a'));
 
 var bemjson = require('../benchmark/bemjsons/webpage.js');
 
-//for (var i = 0; i < 1000; i++) {
-    console.log(jsotbh.apply(bemjson));
-//}
+for (var i = 0; i < 100000; i++) {
+    jsotbh.apply(bemjson);
+}

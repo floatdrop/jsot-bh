@@ -66,12 +66,12 @@ This numbers can be used as "fastest possible" BH performance, but not necessary
 
 ```
                       Simple
-          39,423 op/s » BH
-         139,328 op/s » JSOT-BH
+          40,594 op/s » BH
+         136,788 op/s » JSOT-BH
 
                       Webpage
-          15,072 op/s » BH
-          53,770 op/s » JSOT-BH
+          14,633 op/s » BH
+          64,691 op/s » JSOT-BH
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh

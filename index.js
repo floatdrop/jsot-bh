@@ -1,4 +1,5 @@
 var JSOT = require('jsot');
+var fast = require('fast.js');
 
 var JSOTBH = function JSOTBH () {
     JSOT.call(this);
@@ -35,16 +36,8 @@ JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
     return result;
 };
 
-JSOTBH.prototype.context = function context(bemjson) {
-    this._current = bemjson;
-    return this._contextObject;
-};
-
 JSOTBH.prototype.match = function matchBH(pattern, callback) {
-    var self = this;
-    JSOT.prototype.match.call(this, this.parsePattern(pattern), function (bemjson) {
-        return callback(self.context(bemjson), bemjson);
-    });
+    JSOT.prototype.match.call(this, this.parsePattern(pattern), fast.bind(callback, this, this));
 };
 
 module.exports = JSOTBH;
