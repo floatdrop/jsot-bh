@@ -13,7 +13,7 @@ describe('Parse pattern', function () {
     it('should support block_blockMod', function () {
         parsePattern('html_visible').should.eql({
             block: 'html',
-            blockMods: {
+            mods: {
                 visible: true
             }
         });
@@ -22,7 +22,7 @@ describe('Parse pattern', function () {
     it('should support block_blockMod_value', function () {
         parsePattern('html_visible_yes').should.eql({
             block: 'html',
-            blockMods: {
+            mods: {
                 visible: 'yes'
             }
         });
@@ -39,7 +39,7 @@ describe('Parse pattern', function () {
         parsePattern('html__head_visible').should.eql({
             block: 'html',
             elem: 'head',
-            mods: {
+            elemMods: {
                 visible: true
             }
         });
@@ -49,7 +49,7 @@ describe('Parse pattern', function () {
         parsePattern('html__head_visible_no').should.eql({
             block: 'html',
             elem: 'head',
-            mods: {
+            elemMods: {
                 visible: 'no'
             }
         });
@@ -58,11 +58,11 @@ describe('Parse pattern', function () {
     it('should support block_blockMod__elem_elemMod_value', function () {
         parsePattern('html_title__head_visible_no').should.eql({
             block: 'html',
-            blockMods: {
+            mods: {
                 title: true
             },
             elem: 'head',
-            mods: {
+            elemMods: {
                 visible: 'no'
             }
         });
@@ -71,11 +71,11 @@ describe('Parse pattern', function () {
     it('should support block_blockMod_value__elem_elemMod_value', function () {
         parsePattern('html_title_tits__head_visible_no').should.eql({
             block: 'html',
-            blockMods: {
+            mods: {
                 title: 'tits'
             },
             elem: 'head',
-            mods: {
+            elemMods: {
                 visible: 'no'
             }
         });

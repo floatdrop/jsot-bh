@@ -36,7 +36,7 @@ describe('bh-match', function () {
             block: 'html',
             content: [
                 { block: 'p', content: 'You' },
-                { block: 'p', blockMods: { bold: 'yes' }, content: 'Rock!' }
+                { block: 'p', mods: { bold: 'yes' }, content: 'Rock!' }
             ]
         }).should.equal('<html><p>You</p><p><b>Rock!</b></p></html>');
     });

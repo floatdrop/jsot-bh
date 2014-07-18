@@ -56,6 +56,10 @@ JSOTBH.prototype.position = function position() {
     return this._current.position;
 };
 
+JSOTBH.prototype.parseObject = function parseObject(object) {
+    return JSOTBH.prototype.parseObject.call(this, object);
+};
+
 JSOTBH.prototype.match = function matchBH(pattern, callback) {
     JSOT.prototype.match.call(this, Utils.parseBhIdentifier(pattern), fast.bind(callback, this, this));
 };
