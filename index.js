@@ -6,7 +6,7 @@ var lastGenId = 0;
 var JSOTBH = function JSOTBH () {
     JSOT.call(this);
 
-    this._milleseconds = new Date().getTime().toString();
+    this._milliseconds = new Date().getTime().toString();
 };
 
 JSOTBH.prototype = Object.create(JSOT.prototype);
@@ -71,7 +71,7 @@ JSOTBH.prototype.extend = function (target) {
 
 JSOTBH.prototype.generateId = function () {
     lastGenId += 1;
-    return 'uniq' + this._milleseconds + lastGenId;
+    return 'uniq' + this._milliseconds + lastGenId;
 };
 
 JSOTBH.prototype.js = function (value, force) {

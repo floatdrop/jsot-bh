@@ -1,7 +1,7 @@
 var BH = require('bh').BH;
 var bh = new BH();
 
-bh.match('html_htmlMod', function(ctx) {
+bh.match('block__elem', function(ctx) {
   ctx.tag('html');
 });
 
