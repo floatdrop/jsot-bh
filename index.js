@@ -25,34 +25,34 @@ var JSOTBH = function JSOTBH () {
 JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
 
-JSOTBH.prototype.generateId = function () {
+JSOTBH.prototype.generateId = function generateId() {
     lastGenId += 1;
     return 'uniq' + this._milliseconds + lastGenId;
 };
 
-JSOTBH.prototype.isFirst = function () {
+JSOTBH.prototype.isFirst = function isFirts() {
     return this._current.position === 0;
 };
 
-JSOTBH.prototype.isLast = function () {
+JSOTBH.prototype.isLast = function isLast() {
     return this._current.position === this._current.length - 1;
 };
 
-JSOTBH.prototype.isSimple = function (obj) {
+JSOTBH.prototype.isSimple = function isSimple(obj) {
     if (!obj || obj === true) { return true; }
     var t = typeof obj;
     return t === 'string' || t === 'number';
 };
 
-JSOTBH.prototype.json = function () {
+JSOTBH.prototype.json = function json() {
     return this._current.element;
 };
 
-JSOTBH.prototype.length = function () {
+JSOTBH.prototype.length = function length() {
     return this._current.length;
 };
 
-JSOTBH.prototype.position = function () {
+JSOTBH.prototype.position = function position() {
     return this._current.position;
 };
 

@@ -1,7 +1,7 @@
 var Utils = {};
 
 Utils.setPropertyKeyValueObject = function (element, property, name) {
-    return function(values, force) {
+    return function scopedSPKVO(values, force) {
         if (!values) { return element[property][name]; }
 
         for (var key in values) {
@@ -13,7 +13,7 @@ Utils.setPropertyKeyValueObject = function (element, property, name) {
 };
 
 Utils.setPropertyArray = function setPropertyArray(element, property, name) {
-    return function (value, force) {
+    return function scopedSPA(value, force) {
         if (force) {
             element[property][name] = value;
             return this;
@@ -36,7 +36,7 @@ Utils.setPropertyArray = function setPropertyArray(element, property, name) {
 };
 
 Utils.setPropertyValue = function setPropertyValue(element, property, name) {
-    return function(value, force) {
+    return function scopedSPV(value, force) {
         if (force) {
             element[property][name] = value;
             return this;
@@ -55,7 +55,7 @@ Utils.setPropertyValue = function setPropertyValue(element, property, name) {
 };
 
 Utils.setPropertyKeyValue = function setPropertyKeyValue(element, property, name) {
-    return function (key, value, force) {
+    return function scopedSPKV(key, value, force) {
         element[property][name] = element[property][name] || {};
 
         if (force) {
