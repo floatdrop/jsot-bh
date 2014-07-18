@@ -3,10 +3,6 @@ var fast = require('fast.js');
 
 var JSOTBH = function JSOTBH () {
     JSOT.call(this);
-
-    this._contextObject = {
-        apply: JSOT.prototype.apply.bind(this)
-    };
 };
 
 JSOTBH.prototype = Object.create(JSOT.prototype);

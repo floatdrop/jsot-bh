@@ -35,16 +35,16 @@ Current status:
 var JSOTBH = require('jsot-bh');
 var jsotbh = new JSOTBH();
 
-jsotbh.match('html', function (context) {
-    return '<html>' + jsotbh.apply(context.content) + '</html>';
+jsotbh.match('html', function (context, json) {
+    return '<html>' + context.apply(json.content) + '</html>';
 });
 
-jsotbh.match('p', function (context) {
-    return '<p>' + jsotbh.apply(context.content) + '</p>';
+jsotbh.match('p', function (context, json) {
+    return '<p>' + context.apply(json.content) + '</p>';
 });
 
-jsotbh.match('p_bold_yes', function (context) {
-    return '<p><b>' + jsotbh.apply(context.content) + '</b></p>';
+jsotbh.match('p_bold_yes', function (context, json) {
+    return '<p><b>' + context.apply(json.content) + '</b></p>';
 });
 
 console.log(
