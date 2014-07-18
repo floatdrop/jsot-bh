@@ -31,6 +31,10 @@ JSOTBH.prototype.content = function (value, force) {
     return this.setPropertyValue('content', value, force);
 };
 
+JSOTBH.prototype.js = function (value, force) {
+    return this.setPropertyValue('js', value, force);
+};
+
 JSOTBH.prototype.json = function () {
     return this._current.element;
 };

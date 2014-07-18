@@ -21,7 +21,7 @@ Current status:
  * [x] length
  * [x] isFirst
  * [x] isLast
- * [ ] js
+ * [x] js
  * [x] json
  * [ ] mix
  * [ ] mod
