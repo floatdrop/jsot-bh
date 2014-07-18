@@ -1,8 +1,12 @@
 var JSOT = require('jsot');
 var fast = require('fast.js');
 
+var lastGenId = 0;
+
 var JSOTBH = function JSOTBH () {
     JSOT.call(this);
+
+    this._milleseconds = new Date().getTime().toString();
 };
 
 JSOTBH.prototype = Object.create(JSOT.prototype);
@@ -48,6 +52,11 @@ JSOTBH.prototype.cls = function (value, force) {
 
 JSOTBH.prototype.content = function (value, force) {
     return this.setPropertyValue('content', value, force);
+};
+
+JSOTBH.prototype.generateId = function () {
+    lastGenId += 1;
+    return 'uniq' + this._milleseconds + lastGenId;
 };
 
 JSOTBH.prototype.js = function (value, force) {

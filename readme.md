@@ -16,7 +16,7 @@ Current status:
  * [x] cls
  * [x] content
  * [ ] extend
- * [ ] generateId
+ * [x] generateId
  * [x] position
  * [x] length
  * [x] isFirst
