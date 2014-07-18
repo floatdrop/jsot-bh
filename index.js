@@ -138,6 +138,28 @@ JSOTBH.prototype.match = function matchBH(pattern, callback) {
     JSOT.prototype.match.call(this, this.parsePattern(pattern), fast.bind(callback, this, this));
 };
 
+JSOTBH.prototype.mix = function(mix, force) {
+    if (force) {
+        this._current.element.mix = mix;
+        return this;
+    }
+
+    if (mix !== undefined) {
+        if (this._current.element.mix) {
+            this._current.element.mix = Array.isArray(this._current.element.mix) ?
+                this._current.element.mix.concat(mix) :
+                [this._current.element.mix].concat(mix);
+        } else {
+            this._current.element.mix = mix;
+        }
+
+        return this;
+    }
+
+    return this._current.element.mix;
+
+};
+
 JSOTBH.prototype.setPropertyValue = function setPropertyValue(name, value, force) {
     if (force) {
         this._current.element[name] = value;

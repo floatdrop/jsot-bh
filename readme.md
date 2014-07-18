@@ -24,7 +24,7 @@ Current status:
  * [x] isSimple
  * [x] js
  * [x] json
- * [ ] mix
+ * [x] mix
  * [x] mod
  * [x] mods
  * [x] param
