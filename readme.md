@@ -12,7 +12,7 @@ Current status:
  * [ ] applyBase
  * [x] attr
  * [x] attrs
- * [ ] bem
+ * [x] bem
  * [x] cls
  * [x] content
  * [ ] extend

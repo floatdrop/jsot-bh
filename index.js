@@ -23,6 +23,10 @@ JSOTBH.prototype.attrs = function (values, force) {
     return this._current.element.attrs;
 };
 
+JSOTBH.prototype.bem = function (tagName, force) {
+    return this.setPropertyValue('bem', tagName, force);
+};
+
 JSOTBH.prototype.cls = function (value, force) {
     return this.setPropertyValue('cls', value, force);
 };
