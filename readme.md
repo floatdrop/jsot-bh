@@ -26,7 +26,7 @@ Current status:
  * [ ] mix
  * [x] mod
  * [x] mods
- * [ ] param
+ * [x] param
  * [ ] stop
  * [ ] tParam
  * [x] tag

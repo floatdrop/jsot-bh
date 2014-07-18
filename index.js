@@ -75,6 +75,8 @@ JSOTBH.prototype.position = function () {
     return this._current.position;
 };
 
+JSOTBH.prototype.param = JSOTBH.prototype.setPropertyValue;
+
 JSOTBH.prototype.length = function () {
     return this._current.length;
 };
