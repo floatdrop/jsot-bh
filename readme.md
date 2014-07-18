@@ -2,6 +2,28 @@
 
 This is wrapper around [JSOT](https://github.com/floatdrop/jsot) template engine, that provides BH matchers and some other things.
 
+## API
+
+Context methods should correspond to [BH](https://github.com/enb-make/bh#%D0%9A%D0%BB%D0%B0%D1%81%D1%81-ctx) specification:
+
+Current status:
+
+ * [ ] apply
+ * [ ] attr
+ * [ ] attrs
+ * [ ] bem
+ * [ ] cls
+ * [ ] content
+ * [ ] extend
+ * [ ] js
+ * [ ] json
+ * [ ] mix
+ * [ ] mod
+ * [ ] mods
+ * [ ] param
+ * [ ] stop
+ * [ ] tag
+
 ## Usage
 
 ```js
@@ -44,10 +66,6 @@ console.log(
           14,324 op/s » BH
           74,962 op/s » JSOT-BH
 ```
-
-## API
-
-Should be same as [JSOT](https://github.com/floatdrop/jsot#api)
 
 [npm-url]: https://npmjs.org/package/jsot-bh
 [npm-image]: http://img.shields.io/npm/v/jsot-bh.svg
