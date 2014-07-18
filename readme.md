@@ -9,12 +9,16 @@ Context methods should correspond to [BH](https://github.com/enb-make/bh#%D0%9A%
 Current status:
 
  * [ ] apply
+ * [ ] applyBase
  * [ ] attr
  * [ ] attrs
  * [ ] bem
  * [ ] cls
  * [ ] content
  * [ ] extend
+ * [ ] generateId
+ * [ ] isFirst
+ * [ ] isLast
  * [ ] js
  * [ ] json
  * [ ] mix
@@ -22,6 +26,7 @@ Current status:
  * [ ] mods
  * [ ] param
  * [ ] stop
+ * [ ] tParam
  * [ ] tag
 
 ## Usage
