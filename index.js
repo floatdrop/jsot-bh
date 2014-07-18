@@ -8,6 +8,24 @@ var JSOTBH = function JSOTBH () {
 JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
 
+JSOTBH.prototype.attr = function (key, value, force) {
+    this._current.element.attrs = this._current.element.attrs || {};
+
+    if (force) {
+        this._current.element.attrs[key] = value;
+        return this;
+    }
+
+    if (value) {
+        this._current.element.attrs[key] =
+            this._current.element.attrs[key] === undefined ?
+                value : this._current.element.attrs[key];
+        return this;
+    }
+
+    return this._current.element.attrs[key];
+};
+
 JSOTBH.prototype.content = function (value, force) {
     if (force) {
         this._current.element.content = value;
@@ -15,7 +33,10 @@ JSOTBH.prototype.content = function (value, force) {
     }
 
     if (value) {
-        this._current.element.content = this._current.element.content === undefined ? value : this._current.element.content;
+        this._current.element.content =
+            this._current.element.content === undefined ?
+                value :
+                this._current.element.content;
         return this;
     }
 
@@ -30,7 +51,9 @@ JSOTBH.prototype.tag = function (tagName, force) {
 
     if (tagName !== undefined) {
         this._current.element.tag =
-            this._current.element.tag === undefined ? tagName : this._current.element.tag;
+            this._current.element.tag === undefined ?
+                tagName :
+                this._current.element.tag;
         return this;
     }
 
