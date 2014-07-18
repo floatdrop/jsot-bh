@@ -104,6 +104,12 @@ JSOTBH.prototype.isLast = function () {
     return this._current.position === this._current.length - 1;
 };
 
+JSOTBH.prototype.isSimple = function (obj) {
+    if (!obj || obj === true) { return true; }
+    var t = typeof obj;
+    return t === 'string' || t === 'number';
+};
+
 JSOTBH.prototype.parsePattern = function parsePattern(pattern) {
     var result = {};
 
