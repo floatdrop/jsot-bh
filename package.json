@@ -6,7 +6,6 @@
   "scripts": {
     "test": "mocha -R spec",
     "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
-    "bench": "matcha"
   },
   "repository": {
     "type": "git",
@@ -29,7 +28,6 @@
     "bh": "^2.2.0",
     "coveralls": "^2.7.0",
     "istanbul": "^0.3.0",
-    "matcha": "^0.5.0",
     "mocha": "^1.20.1",
     "mocha-lcov-reporter": "^0.0.1",
     "should": "^4.0.4"
