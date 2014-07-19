@@ -36,6 +36,6 @@
   },
   "dependencies": {
     "fast.js": "0.0.3",
-    "jsot": "^0.2.1"
+    "jsot": "^0.2.2"
   }
 }

@@ -1,37 +1,37 @@
 var Utils = {};
 
-Utils.setPropertyKeyValueObject = function (element, property, name) {
+Utils.setPropertyKeyValueObject = function (name) {
     return function scopedSPKVO(values, force) {
-        if (!values) { return element[property][name]; }
+        if (!values) { return this._current.element[name]; }
 
         for (var key in values) {
-            Utils.setPropertyKeyValue(element, property, name)(key, values[key], force);
+            Utils.setPropertyKeyValue(name)(key, values[key], force);
         }
 
-        return element;
+        return this._current.element;
     };
 };
 
-Utils.setPropertyArray = function setPropertyArray(element, property, name) {
+Utils.setPropertyArray = function setPropertyArray(name) {
     return function scopedSPA(value, force) {
         if (force) {
-            element[property][name] = value;
+            this._current.element[name] = value;
             return this;
         }
 
         if (value !== undefined) {
-            if (element[property][name]) {
-                element[property][name] = Array.isArray(element[property][name]) ?
-                    element[property][name].concat(value) :
-                    [element[property][name]].concat(value);
+            if (this._current.element[name]) {
+                this._current.element[name] = Array.isArray(this._current.element[name]) ?
+                    this._current.element[name].concat(value) :
+                    [this._current.element[name]].concat(value);
             } else {
-                element[property][name] = value;
+                this._current.element[name] = value;
             }
 
             return this;
         }
 
-        return element[property][name];
+        return this._current.element[name];
     };
 };
 
@@ -46,23 +46,23 @@ Utils.setPropertyValue = function setPropertyValue(name) {
     }.bind(this);
 };
 
-Utils.setPropertyKeyValue = function setPropertyKeyValue(element, property, name) {
+Utils.setPropertyKeyValue = function setPropertyKeyValue(name) {
     return function scopedSPKV(key, value, force) {
-        element[property][name] = element[property][name] || {};
+        this._current.element[name] = this._current.element[name] || {};
 
         if (force) {
-            element[property][name][key] = value;
+            this._current.element[name][key] = value;
             return this;
         }
 
         if (value) {
-            element[property][name][key] =
-                element[property][name][key] === undefined ?
-                    value : element[property][name][key];
+            this._current.element[name][key] =
+                this._current.element[name][key] === undefined ?
+                    value : this._current.element[name][key];
             return this;
         }
 
-        return element[property][name][key];
+        return this._current.element[name][key];
     };
 };
 
