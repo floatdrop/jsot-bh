@@ -68,13 +68,20 @@ console.log(
 This numbers can be used as "fastest possible" BH performance, but not necessary achivable (`jsot-bh` is lacking some functionality - see API status for details).
 
 ```
-                      Simple
-          38,381 op/s » BH
-         129,805 op/s » JSOT-BH
+Benchmarking block matching
+  jsot#block            x 4,577,419 ops/sec ±0.62% (94 runs sampled)
+  jsotbh#block          x   663,238 ops/sec ±1.00% (89 runs sampled)
+  bh#block              x    62,334 ops/sec ±2.49% (82 runs sampled)
 
-                      Webpage
-          14,262 op/s » BH
-          52,239 op/s » JSOT-BH
+Benchmarking block_mod matching
+  jsot#block_mod        x 4,476,740 ops/sec ±1.78% (92 runs sampled)
+  jsotbh#block_mod      x   514,579 ops/sec ±0.61% (87 runs sampled)
+  bh#block_mod          x    49,622 ops/sec ±2.40% (82 runs sampled)
+
+Benchmarking element matching...
+  jsot#block__elem      x 1,823,559 ops/sec ±0.94% (89 runs sampled)
+  jsotbh#block__elem    x   216,664 ops/sec ±0.69% (92 runs sampled)
+  bh#block__elem        x    45,447 ops/sec ±2.26% (85 runs sampled)  
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
