@@ -33,7 +33,6 @@
     "should": "^4.0.4"
   },
   "dependencies": {
-    "fast.js": "0.0.3",
     "jsot": "^0.2.2"
   }
 }
