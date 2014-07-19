@@ -25,6 +25,14 @@ var JSOTBH = function JSOTBH () {
 JSOTBH.prototype = Object.create(JSOT.prototype);
 JSOTBH.prototype.constructor = JSOTBH;
 
+JSOTBH.prototype.parseObject = function parseObject(object) {
+    return JSOTBH.prototype.parseObject.call(this, object);
+};
+
+JSOTBH.prototype.match = function matchBH(pattern, callback) {
+    JSOT.prototype.match.call(this, Utils.parseBhIdentifier(pattern), fast.bind(callback, this, this));
+};
+
 JSOTBH.prototype.generateId = function generateId() {
     lastGenId += 1;
     return 'uniq' + this._milliseconds + lastGenId;
@@ -54,14 +62,6 @@ JSOTBH.prototype.length = function length() {
 
 JSOTBH.prototype.position = function position() {
     return this._current.position;
-};
-
-JSOTBH.prototype.parseObject = function parseObject(object) {
-    return JSOTBH.prototype.parseObject.call(this, object);
-};
-
-JSOTBH.prototype.match = function matchBH(pattern, callback) {
-    JSOT.prototype.match.call(this, Utils.parseBhIdentifier(pattern), fast.bind(callback, this, this));
 };
 
 module.exports = JSOTBH;
