@@ -4,14 +4,16 @@ var JSOTBH = require('..');
 require('should');
 
 describe('element matching', function () {
-    it('should match on block with element in content object', function () {
+    it.only('should match on block with element in content object', function () {
         var jsotbh = new JSOTBH();
-        jsotbh.match('html', function (ctx) { return '<html>' + this.apply(ctx.content()) + '</html>'; });
+        jsotbh.match('html', function (ctx, json) {
+            ctx.tag('html');
+        });
         jsotbh.match('html__body', function () { return '<body>'; });
 
         jsotbh
             .apply({ block: 'html', content: { elem: 'body' } })
-            .should.equal('<html/>');
+            .should.equal('<html><body></html>');
     });
 
     it('should match on block with element in content array', function () {

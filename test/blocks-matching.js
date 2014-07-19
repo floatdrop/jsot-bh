@@ -19,7 +19,7 @@ describe('block matching', function () {
         jsotbh.match('input_disabled_yes', function () { return '<input disabled />'; });
 
         jsotbh
-            .apply({ block: 'html', mods: { disabled: 'yes' } })
+            .apply({ block: 'input', mods: { disabled: 'yes' } })
             .should.equal('<input disabled />');
     });
 });

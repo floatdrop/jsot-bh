@@ -35,23 +35,15 @@ Utils.setPropertyArray = function setPropertyArray(element, property, name) {
     };
 };
 
-Utils.setPropertyValue = function setPropertyValue(element, property, name) {
-    return function scopedSPV(value, force) {
-        if (force) {
-            element[property][name] = value;
-            return this;
-        }
-
+Utils.setPropertyValue = function setPropertyValue(name) {
+    return function scopedSPV(value) {
         if (value) {
-            element[property][name] =
-                element[property][name] === undefined ?
-                    value :
-                    element[property][name];
+            this._current.element[name] = value;
             return this;
         }
 
-        return element[property][name];
-    };
+        return this._current.element[name];
+    }.bind(this);
 };
 
 Utils.setPropertyKeyValue = function setPropertyKeyValue(element, property, name) {
