@@ -5,9 +5,20 @@ var lastGenId = 0;
 var JSOTBH = function JSOTBH () {
     JSOT.call(this);
 
+    this._milliseconds = new Date().getTime().toString();
+
     this.attr = Utils.setPropertyKeyValue.bind(this)('attrs');
+    this.attrs = Utils.setPropertyKeyValueObject.bind(this)('attrs');
+    this.bem = Utils.setPropertyValue.bind(this)('bem');
+    this.cls = Utils.setPropertyValue.bind(this)('cls');
     this.content = Utils.setPropertyValue.bind(this)('content');
+    this.extend = Utils.extend;
+    this.js = Utils.setPropertyValue.bind(this)('js');
+    this.param = Utils.setPropertyValue.bind(this);
     this.tag = Utils.setPropertyValue.bind(this)('tag');
+    this.mix = Utils.setPropertyArray.bind(this)('mix');
+    this.mod = Utils.setPropertyKeyValue.bind(this)('mods');
+    this.mods = Utils.setPropertyKeyValueObject.bind(this)('mods');
 
     JSOT.prototype.match.call(this, function () { return true; }, function (json) {
         if (typeof json.content !== 'string') {
