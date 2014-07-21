@@ -37,7 +37,9 @@ Utils.bemClasses = function(json) {
 function classes(json) {
     var bemClasses = Utils.bemClasses(json);
     var iBemClass = json.hasJsParams && 'i-bem';
-    return [bemClasses, json.cls, iBemClass].filter(Boolean).join(' ');
+    var res = [bemClasses, json.cls, iBemClass].filter(Boolean).join(' ');
+    if (res === '') { return res; }
+    return ' class="' + escape(res) + '"';
 }
 
 function attributes(json) {
@@ -61,6 +63,7 @@ Utils.renderHtmlBlock = function (json) {
     json.content = json.content || '';
     json.jsParams = {};
     json.js = json.js === true ? {} : json.js;
+    json.attrs = json.attrs || {};
 
     if (json.js) {
         json.jsParams[json.block + (json.elem ? '__' + json.elem : '')] = json.js;
@@ -75,12 +78,12 @@ Utils.renderHtmlBlock = function (json) {
     return res + '>' + json.content + '</' + json.tag + '>';
 };
 
-var escape = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+var escapeMap = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 var badChars = /[&<>"]/g;
 var possible = /[&<>"]/;
 
 var escapeChar = function(chr) {
-    return escape[chr] || chr;
+    return escapeMap[chr] || chr;
 };
 
 function escape(string) {
