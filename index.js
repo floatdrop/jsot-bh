@@ -50,17 +50,7 @@ function patchContentElements(object) {
     }
 }
 
-JSOTBH.prototype.html = function (json) {
-    var tag = json.tag || 'div';
-    var attrs = '';
-    if (json.attrs) {
-        attrs = ' ';
-        for (var key in json.attrs) {
-            attrs += key + '="' + json.attrs[key] + '"';
-        }
-    }
-    return '<' + tag + attrs + '>' + (json.content || '') + '</' + tag + '>';
-};
+JSOTBH.prototype.html = Utils.renderHtmlBlock;
 
 JSOTBH.prototype.processObject = function (json) {
     patchContentElements(json);

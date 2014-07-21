@@ -1,5 +1,118 @@
 var Utils = {};
 
+var _optJsAttrIsJs = 'onclick';
+var _defaultTag = 'div';
+
+function unwrapMixedBlocks(json) {
+    var mixes = json.mix;
+    if (mixes) {
+        for (var i = 0; i < mixes.length; i++) {
+            var mix = mixes[i];
+            if (mix && mix.js) {
+                mix.js = mix.js === true ? {} : mix.js;
+                json.jsParams[(mix.block || json.block) + (mix.elem ? '__' + mix.elem : '')] = mix.js;
+                json.hasMixJsParams = true;
+            }
+        }
+    }
+}
+
+Utils.bemClasses = function(json) {
+    if (json.bem === false || !json.block) { return ''; }
+
+    var base = json.block + (json.elem ? '__' + json.elem : '');
+    var res = (base === json.block) ? '' : base;
+    var mods = json.mods || json.elem && json.elemMods;
+
+    for (var i in mods) {
+        res += (res ? ' ' : '') + base + '_' + i + (mods[i] === true ? '' : '_' + mods[i]);
+    }
+
+    for (var i = 0; i < json.mix.length; i++) {
+        res += ' ' + Utils.bemClasses(json.mix[i], json.block);
+    }
+    return res;
+};
+
+function classes(json) {
+    var bemClasses = Utils.bemClasses(json);
+    var iBemClass = json.hasJsParams && 'i-bem';
+    return [bemClasses, json.cls, iBemClass].filter(Boolean).join(' ');
+}
+
+function attributes(json) {
+    if (!json.attrs) { return ''; }
+
+    var attrs = '';
+
+    for (var key in json.attrs) {
+        var value = json.attrs[key];
+        if (value === null) { continue; }
+        attrs += ' ' + key + '="' + escape(value) + '"';
+    }
+
+    return attrs;
+}
+
+Utils.renderHtmlBlock = function (json) {
+    if (typeof json !== 'object') { return json; }
+
+    json.tag = json.tag || _defaultTag;
+    json.content = json.content || '';
+    json.jsParams = {};
+    json.js = json.js === true ? {} : json.js;
+
+    if (json.js) {
+        json.jsParams[json.block + (json.elem ? '__' + json.elem : '')] = json.js;
+    }
+
+    unwrapMixedBlocks(json);
+    var jsData = JSON.stringify(json.jsParams);
+    json.attrs[json.jsAttr || _optJsAttrIsJs] = (this._optJsAttrIsJs ? 'return ' + jsData : jsData);
+
+    var res = '<' + json.tag + classes(json) + attributes(json);
+    if (selfCloseHtmlTags[json.tag]) { return res + '/>'; }
+    return res + '>' + json.content + '</' + json.tag + '>';
+};
+
+var escape = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+var badChars = /[&<>"]/g;
+var possible = /[&<>"]/;
+
+var escapeChar = function(chr) {
+    return escape[chr] || chr;
+};
+
+function escape(string) {
+    if (string === null || string === false) {
+        return '';
+    }
+
+    if(!possible.test(string)) { return string; }
+    return string.replace(badChars, escapeChar);
+}
+
+var selfCloseHtmlTags = {
+    area: 1,
+    base: 1,
+    br: 1,
+    col: 1,
+    command: 1,
+    embed: 1,
+    hr: 1,
+    img: 1,
+    input: 1,
+    keygen: 1,
+    link: 1,
+    menuitem: 1,
+    meta: 1,
+    param: 1,
+    source: 1,
+    track: 1,
+    wbr: 1
+};
+
+
 Utils.setPropertyKeyValueObject = function (name) {
     return function scopedSPKVO(values, force) {
         if (!values) { return this._current.element[name]; }
