@@ -21,16 +21,19 @@ Utils.bemClasses = function(json) {
     if (json.bem === false || !json.block) { return ''; }
 
     var base = json.block + (json.elem ? '__' + json.elem : '');
-    var res = (base === json.block) ? '' : base;
+    var res = base; // (base === json.block) ? '' : base
     var mods = json.mods || json.elem && json.elemMods;
 
     for (var i in mods) {
         res += (res ? ' ' : '') + base + '_' + i + (mods[i] === true ? '' : '_' + mods[i]);
     }
 
-    for (var i = 0; i < json.mix.length; i++) {
-        res += ' ' + Utils.bemClasses(json.mix[i], json.block);
+    if (json.mix) {
+        for (var i = 0; i < json.mix.length; i++) {
+            res += ' ' + Utils.bemClasses(json.mix[i], json.block);
+        }
     }
+
     return res;
 };
 

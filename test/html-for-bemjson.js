@@ -40,12 +40,37 @@ describe.only('html from bemjson convertation should render', function () {
         render(bemjson).should.equal(bh.apply(bemjson));
     });
 
-    it('typeof bemjson.js === "object"', function () {
+    it('bemjson.block_mod', function () {
+       var bemjson = { block: 'html', mods: { mod: true } };
+        render(bemjson).should.equal(bh.apply(bemjson));
+    });
+
+    it('bemjson.block_mod_yes', function () {
+       var bemjson = { block: 'html', mods: { mod: 'yes' } };
+        render(bemjson).should.equal(bh.apply(bemjson));
+    });
+
+    it('bemjson.block__elem', function () {
+        var bemjson = { block: 'html', elem: { block: 'body' } };
+        render(bemjson).should.equal(bh.apply(bemjson));
+    });
+
+    it('bemjson.block__elem_mod', function () {
+        var bemjson = { block: 'html', elem: { block: 'body', elemMods: { mod: true } } };
+        render(bemjson).should.equal(bh.apply(bemjson));
+    });
+
+    it('bemjson.block__elem_mod_yes', function () {
+        var bemjson = { block: 'html', elem: { block: 'body', elemMods: { mod: 'yes' } } };
+        render(bemjson).should.equal(bh.apply(bemjson));
+    });
+
+    it.skip('typeof bemjson.js === "object"', function () {
         var bemjson = { js: { javascript: 'parameter' } };
         render(bemjson).should.equal(bh.apply(bemjson));
     });
 
-    it('typeof bemjson.js === "boolean"', function () {
+    it.skip('typeof bemjson.js === "boolean"', function () {
         var bemjson = { js: true };
         render(bemjson).should.equal(bh.apply(bemjson));
     });
