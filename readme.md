@@ -10,27 +10,12 @@ Current status:
 
  * [x] apply
  * [ ] applyBase
- * [x] attr
- * [x] attrs
- * [x] bem
- * [x] cls
- * [x] content
+ * [x] Setters/getters (attr, attrs, bem, cls, content, generateId, position, position, length, isFirst, isLast, isSimple, js, json, mix, mod, mods, param, tag)
  * [ ] extend
- * [x] generateId
- * [x] position
- * [x] length
- * [x] isFirst
- * [x] isLast
- * [x] isSimple
- * [x] js
- * [x] json
- * [x] mix
- * [x] mod
- * [x] mods
- * [x] param
  * [ ] stop
  * [ ] tParam
- * [x] tag
+ * [x] Simple block html generation (tag, attrs, content)
+ * [ ] Full block html generation
 
 ## Usage
 
