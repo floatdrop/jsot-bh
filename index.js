@@ -1,9 +1,11 @@
-var JSOT = require('jsot');
 var Utils = require('./utils.js');
 var lastGenId = 0;
 
-var JSOTBH = function JSOTBH () {
-    JSOT.call(this);
+function JSOTBH() {
+    this._matchers = [];
+    this._patterns = [];
+
+    this._current = { length: -1, position: -1 };
 
     this._milliseconds = new Date().getTime().toString();
 
@@ -19,17 +21,91 @@ var JSOTBH = function JSOTBH () {
     this.mix = Utils.setPropertyArray.bind(this)('mix');
     this.mod = Utils.setPropertyKeyValue.bind(this)('mods');
     this.mods = Utils.setPropertyKeyValueObject.bind(this)('mods');
+}
 
-    JSOT.prototype.match.call(this, function () { return true; }, function (json) {
-        if (typeof json.content !== 'string') {
-            json.content = this.apply(json.content);
-        }
-        return this.html(json);
-    }.bind(this));
+JSOTBH.prototype.match = function match(pattern, callback) {
+    var parsedPattern = Utils.parseBhIdentifier(pattern);
+    this._matchers.push(callback.bind(this, this));
+    this._patterns.push(this.compilePattern(parsedPattern));
 };
 
-JSOTBH.prototype = Object.create(JSOT.prototype);
-JSOTBH.prototype.constructor = JSOTBH;
+JSOTBH.prototype.apply = function apply(json) {
+    if (typeof json === 'string') {
+        return json;
+    }
+
+    if (Array.isArray(json)) {
+        return this.processArray(json);
+    }
+
+    if (typeof json === 'object') {
+        patchContentElements(json);
+        return this.processObject(json);
+    }
+};
+
+JSOTBH.prototype.processArray = function processArray(array) {
+    var result = '';
+    for (var i = array.length - 1; i >= 0; i--) {
+        this._current.length = array.length;
+        this._current.position = i;
+        result = this.apply(array[i]) + result;
+    }
+    return result;
+};
+
+JSOTBH.prototype.processObject = function processObject(object) {
+
+    for (var m = this._matchers.length - 1; m >= 0; m--) {
+        if (this._patterns[m](object)) {
+            this._current.element = object;
+            var result = this._matchers[m](object);
+            if (result) { return this.apply(result); }
+        }
+    }
+
+    if (object.content) {
+        object.content = this.apply(object.content);
+    }
+
+    return this.toHtml(object);
+};
+
+function escapeIdentifier (id) {
+    if (/^[$A-Z\_a-z][$_0-9A-Za-z]*$/.test(id)) {
+        return '.' + id;
+    }
+    return '["' + id + '"]';
+}
+
+function buildCompareStatement (prefix, object) {
+    var statement = [];
+
+    for (var key in object) {
+        var nextPrefix = prefix + escapeIdentifier(key);
+        if (typeof object[key] === 'object') {
+            statement.push(nextPrefix);
+            statement.push(buildCompareStatement(nextPrefix, object[key]));
+        } else if (typeof object[key] === 'string') {
+            statement.push(nextPrefix + ' === "' + object[key] + '"');
+        } else {
+            statement.push(nextPrefix + ' === ' + object[key]);
+        }
+    }
+
+    return statement.join(' && ');
+}
+
+JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
+    var statement = typeof pattern !== 'string' ?
+        buildCompareStatement('object', pattern) :
+        'object' + escapeIdentifier(pattern);
+
+    var composedFunction = 'return ' + statement + ';';
+
+    /*jshint -W054*/ /* Yes, this is eval */
+    return new Function('object', composedFunction);
+};
 
 function patchContentElements(object) {
     if (object.block && object.content) {
@@ -50,27 +126,7 @@ function patchContentElements(object) {
     }
 }
 
-JSOTBH.prototype.html = Utils.renderHtmlBlock;
-
-JSOTBH.prototype.processObject = function (json) {
-    patchContentElements(json);
-    return JSOT.prototype.processObject.call(this, json);
-};
-
-function renderContent(json) {
-    json.content = this.apply(this.content() || '');
-}
-
-JSOTBH.prototype.match = function matchBH(pattern, callback) {
-    var parsedPattern = Utils.parseBhIdentifier(pattern);
-    if (parsedPattern.elem) {
-        JSOT.prototype.match.call(this, { block: parsedPattern.block }, renderContent);
-    } else {
-        parsedPattern.elem = undefined;
-    }
-    JSOT.prototype.match.call(this, parsedPattern, renderContent);
-    JSOT.prototype.match.call(this, parsedPattern, callback.bind(this, this));
-};
+JSOTBH.prototype.toHtml = Utils.renderHtmlBlock;
 
 JSOTBH.prototype.generateId = function generateId() {
     lastGenId += 1;

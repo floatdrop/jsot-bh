@@ -4,8 +4,8 @@ var _optJsAttrIsJs = 'onclick';
 var _defaultTag = 'div';
 
 function unwrapMixedBlocks(json) {
-    var mixes = json.mix;
-    if (mixes) {
+    if (json.mix) {
+        var mixes = json.mix;
         for (var i = 0; i < mixes.length; i++) {
             var mix = mixes[i];
             if (mix && mix.js) {
@@ -17,10 +17,11 @@ function unwrapMixedBlocks(json) {
     }
 }
 
-Utils.bemClasses = function(json) {
-    if (json.bem === false || !json.block) { return ''; }
+Utils.bemClasses = function(json, block) {
+    block = json.block || block;
+    if (json.bem === false || !block) { return ''; }
 
-    var base = json.block + (json.elem ? '__' + json.elem : '');
+    var base = block + (json.elem ? '__' + json.elem : '');
     var res = base; // (base === json.block) ? '' : base
     var mods = json.mods || json.elem && json.elemMods;
 
@@ -38,7 +39,7 @@ Utils.bemClasses = function(json) {
 };
 
 function classes(json) {
-    var bemClasses = Utils.bemClasses(json);
+    var bemClasses = Utils.bemClasses(json, json.block);
     var iBemClass = json.hasJsParams && 'i-bem';
     var res = [bemClasses, json.cls, iBemClass].filter(Boolean).join(' ');
     if (res === '') { return res; }
@@ -67,6 +68,10 @@ Utils.renderHtmlBlock = function (json) {
     json.jsParams = {};
     json.js = json.js === true ? {} : json.js;
     json.attrs = json.attrs || {};
+
+    if (json.mix && !Array.isArray(json.mix)) {
+        json.mix = [json.mix];
+    }
 
     if (json.js) {
         json.jsParams[json.block + (json.elem ? '__' + json.elem : '')] = json.js;
