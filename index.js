@@ -11,7 +11,7 @@ function JSOTBH() {
     this._milliseconds = new Date().getTime().toString();
 
     this.applyBase = function () {
-        this.processObject(this._current.element, this._current.matcherIdx);
+        this.processObject(this._current.element, this._current.matcherIdx + 1);
         this.stop();
     };
 
@@ -83,7 +83,7 @@ JSOTBH.prototype.processObject = function processObject(object, startFrom) {
                 this._current.matcherIdx = m;
                 var result = matchersForBlock[m](object);
                 if (result) { break; }
-                if (this._stopFlag) { this._stopFlag = false; break; }
+                if (this._stopFlag) { _stopFlag = false; break; }
             }
         }
     }

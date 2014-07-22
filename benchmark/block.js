@@ -16,7 +16,6 @@ var BH = require('bh').BH;
 var bh = new BH();
 bh.match('block', function (ctx) { ctx.tag('block'); });
 
-
 suite
 .add('jsot#block', function() {
     jsot.apply({ block: 'block' });
