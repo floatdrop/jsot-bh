@@ -6,9 +6,18 @@ function JSOTBH() {
     this._matchers = {};
     this._patterns = {};
 
-    this._current = { length: -1, position: -1 };
+    this._current = { length: -1, position: -1, matcherIdx: -1 };
 
     this._milliseconds = new Date().getTime().toString();
+
+    this.applyBase = function () {
+        this.processObject(this._current.element, this._current.matcherIdx);
+        this.stop();
+    };
+
+    this.stop = function () {
+        this._stopFlag = true;
+    };
 
     this.attr = Utils.setPropertyKeyValue.bind(this)('attrs');
     this.attrs = Utils.setPropertyKeyValueObject.bind(this)('attrs');
@@ -71,8 +80,10 @@ JSOTBH.prototype.processObject = function processObject(object, startFrom) {
         for (var m = startFrom; m < matchersForBlock.length; m++) {
             if (patternsForBlock[m](object)) {
                 this._current.element = object;
+                this._current.matcherIdx = m;
                 var result = matchersForBlock[m](object);
                 if (result) { break; }
+                if (this._stopFlag) { this._stopFlag = false; break; }
             }
         }
     }

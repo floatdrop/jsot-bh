@@ -54,19 +54,19 @@ This numbers can be used as "fastest possible" BH performance, but not necessary
 
 ```
 Benchmarking block matching
-  jsot#block            x 4,617,707 ops/sec ±0.72% (93 runs sampled)
-  jsotbh#block          x   210,324 ops/sec ±1.55% (81 runs sampled)
-  bh#block              x    56,388 ops/sec ±3.69% (77 runs sampled)
+  jsot#block            x 3,276,978 ops/sec ±1.73% (92 runs sampled)
+  jsotbh#block          x 1,050,475 ops/sec ±2.74% (90 runs sampled)
+  bh#block              x    60,020 ops/sec ±2.35% (80 runs sampled)
 
 Benchmarking block_mod matching
-  jsot#block_mod        x 4,401,312 ops/sec ±1.60% (93 runs sampled)
-  jsotbh#block_mod      x   153,167 ops/sec ±1.65% (87 runs sampled)
-  bh#block_mod          x    48,345 ops/sec ±2.40% (83 runs sampled)
+  jsot#block_mod        x 4,397,479 ops/sec ±0.68% (93 runs sampled)
+  jsotbh#block_mod      x   468,487 ops/sec ±3.42% (83 runs sampled)
+  bh#block_mod          x    47,983 ops/sec ±2.44% (84 runs sampled)
 
 Benchmarking element matching...
-  jsot#block__elem      x 1,460,552 ops/sec ±0.80% (89 runs sampled)
-  jsotbh#block__elem    x    88,456 ops/sec ±1.79% (81 runs sampled)
-  bh#block__elem        x    45,564 ops/sec ±2.68% (87 runs sampled)  
+  jsot#block__elem      x 1,853,451 ops/sec ±1.01% (90 runs sampled)
+  jsotbh#block__elem    x   371,236 ops/sec ±1.18% (90 runs sampled)
+  bh#block__elem        x    44,523 ops/sec ±2.61% (82 runs sampled)  
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
