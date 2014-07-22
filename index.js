@@ -43,7 +43,7 @@ JSOTBH.prototype.match = function match(pattern, callback) {
     this._patterns[parsedPattern.block].push(this.compilePattern(parsedPattern));
 };
 
-JSOTBH.prototype.process = function apply(json) {
+JSOTBH.prototype.process = function process(json) {
     if (typeof json === 'string') {
         return json;
     }
@@ -53,12 +53,12 @@ JSOTBH.prototype.process = function apply(json) {
     }
 
     if (typeof json === 'object') {
-        Utils.patchContentElements(json);
+        Utils.patchContentElements(json, json.block);
         return this.processObject(json, 0);
     }
 };
 
-JSOTBH.prototype.apply = function (json) {
+JSOTBH.prototype.apply = function apply(json) {
     return serialize(this.process(json));
 };
 
@@ -83,7 +83,7 @@ JSOTBH.prototype.processObject = function processObject(object, startFrom) {
                 this._current.matcherIdx = m;
                 var result = matchersForBlock[m](object);
                 if (result) { break; }
-                if (this._stopFlag) { _stopFlag = false; break; }
+                if (this._stopFlag) { this._stopFlag = false; break; }
             }
         }
     }

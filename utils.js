@@ -1,7 +1,8 @@
 var Utils = {};
 
-Utils.patchContentElements = function patchContentElements(object) {
-    if (!object.block || !object.content) { return object; }
+Utils.patchContentElements = function patchContentElements(object, block) {
+    block = object.block || block;
+    if (!block || !object.content) { return object; }
 
     if (typeof object.content === 'object' && object.content.elem) {
         object.content.block = object.block;
