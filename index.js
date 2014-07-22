@@ -3,8 +3,8 @@ var lastGenId = 0;
 var serialize = require('bemjson-to-html');
 
 function JSOTBH() {
-    this._matchers = [];
-    this._patterns = [];
+    this._matchers = {};
+    this._patterns = {};
 
     this._current = { length: -1, position: -1 };
 
@@ -26,11 +26,15 @@ function JSOTBH() {
 
 JSOTBH.prototype.match = function match(pattern, callback) {
     var parsedPattern = Utils.parseBhIdentifier(pattern);
-    this._matchers.push(callback.bind(this, this));
-    this._patterns.push(this.compilePattern(parsedPattern));
+
+    this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || [];
+    this._matchers[parsedPattern.block].push(callback.bind(this, this));
+
+    this._patterns[parsedPattern.block] = this._patterns[parsedPattern.block] || [];
+    this._patterns[parsedPattern.block].push(this.compilePattern(parsedPattern));
 };
 
-JSOTBH.prototype.apply = function apply(json) {
+JSOTBH.prototype.process = function apply(json) {
     if (typeof json === 'string') {
         return json;
     }
@@ -41,8 +45,12 @@ JSOTBH.prototype.apply = function apply(json) {
 
     if (typeof json === 'object') {
         Utils.patchContentElements(json);
-        return this.processObject(json);
+        return this.processObject(json, 0);
     }
+};
+
+JSOTBH.prototype.apply = function (json) {
+    return serialize(this.process(json));
 };
 
 JSOTBH.prototype.processArray = function processArray(array) {
@@ -55,21 +63,25 @@ JSOTBH.prototype.processArray = function processArray(array) {
     return result;
 };
 
-JSOTBH.prototype.processObject = function processObject(object) {
-
-    for (var m = this._matchers.length - 1; m >= 0; m--) {
-        if (this._patterns[m](object)) {
-            this._current.element = object;
-            var result = this._matchers[m](object);
-            if (result) { break; }
+JSOTBH.prototype.processObject = function processObject(object, startFrom) {
+    var matchersForBlock = this._matchers[object.block];
+    console.log(object);
+    if (matchersForBlock) {
+        var patternsForBlock = this._patterns[object.block];
+        for (var m = matchersForBlock.length - (1 + (startFrom || 0)); m >= 0; m--) {
+            if (patternsForBlock[m](object)) {
+                this._current.element = object;
+                var result = matchersForBlock[m](object);
+                if (result) { break; }
+            }
         }
     }
 
     if (object.content) {
-        object.content = this.apply(object.content);
+        object.content = serialize(this.apply(object.content));
     }
 
-    return serialize(object);
+    return object;
 };
 
 function escapeIdentifier (id) {

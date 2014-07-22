@@ -4,7 +4,7 @@ var JSOTBH = require('..');
 require('should');
 
 describe('element matching', function () {
-    it('should match on block with element in content object', function () {
+    it.only('should match on block with element in content object', function () {
         var jsotbh = new JSOTBH();
         jsotbh.match('html', function (ctx) {
             ctx.tag('html');

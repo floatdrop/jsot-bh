@@ -1,7 +1,7 @@
 var Utils = {};
 
 Utils.patchContentElements = function patchContentElements(object) {
-    if (object.block && object.content) { return; }
+    if (!object.block || !object.content) { return object; }
 
     if (typeof object.content === 'object' && object.content.elem) {
         object.content.block = object.block;
@@ -18,6 +18,8 @@ Utils.patchContentElements = function patchContentElements(object) {
             }
         }
     }
+
+    return object;
 };
 
 Utils.setPropertyKeyValueObject = function (name) {
