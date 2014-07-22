@@ -4,7 +4,7 @@ var JSOTBH = require('..');
 require('should');
 
 describe('element matching', function () {
-    it.only('should match on block with element in content object', function () {
+    it('should match on block with element in content object', function () {
         var jsotbh = new JSOTBH();
         jsotbh.match('html', function (ctx) {
             ctx.tag('html');
@@ -28,7 +28,7 @@ describe('element matching', function () {
 
         jsotbh
             .apply({ block: 'html', content: [{ elem: 'body' }, { elem: 'surprise' }] })
-            .should.equal('<html class=\"html\"><body class="html__body"></body><div></div></html>');
+            .should.equal('<html class=\"html\"><body class="html__body"></body><div class="html__surprise"></div></html>');
     });
 
     it('should match on block with element with mods in content', function () {
@@ -41,7 +41,7 @@ describe('element matching', function () {
 
         jsotbh
             .apply({ block: 'ul', content: { elem: 'li', elemMods: { hot: 'yes' } } })
-            .should.equal('<ul class="ul"><li class="ul__li" hot="yes"></li></ul>');
+            .should.equal('<ul class="ul"><li class="ul__li ul__li_hot_yes" hot="yes"></li></ul>');
     });
 
     it('should match on block with element with mods in content array', function () {
@@ -59,6 +59,6 @@ describe('element matching', function () {
                 { elem: 'li', elemMods: { hot: 'yes' } },
                 { elem: 'li' }
             ]})
-            .should.equal('<ul class="ul"><li class="ul__li" hot="yes"></li><div></div></ul>');
+            .should.equal('<ul class="ul"><li class="ul__li ul__li_hot_yes" hot="yes"></li><div class=\"ul__li\"></div></ul>');
     });
 });

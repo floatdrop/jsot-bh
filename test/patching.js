@@ -3,7 +3,7 @@
 var patchObject = require('../utils.js').patchContentElements;
 require('should');
 
-describe.only('Patch content', function () {
+describe('Patch content', function () {
     it('should ignore object, if it is not a block', function () {
         patchObject({black: 'wow'})
         .should.eql({black: 'wow'});

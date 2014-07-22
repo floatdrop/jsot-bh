@@ -65,10 +65,10 @@ JSOTBH.prototype.processArray = function processArray(array) {
 
 JSOTBH.prototype.processObject = function processObject(object, startFrom) {
     var matchersForBlock = this._matchers[object.block];
-    console.log(object);
+
     if (matchersForBlock) {
         var patternsForBlock = this._patterns[object.block];
-        for (var m = matchersForBlock.length - (1 + (startFrom || 0)); m >= 0; m--) {
+        for (var m = startFrom; m < matchersForBlock.length; m++) {
             if (patternsForBlock[m](object)) {
                 this._current.element = object;
                 var result = matchersForBlock[m](object);
@@ -78,7 +78,7 @@ JSOTBH.prototype.processObject = function processObject(object, startFrom) {
     }
 
     if (object.content) {
-        object.content = serialize(this.apply(object.content));
+        object.content = this.apply(object.content);
     }
 
     return object;
@@ -113,6 +113,10 @@ JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     var statement = typeof pattern !== 'string' ?
         buildCompareStatement('object', pattern) :
         'object' + escapeIdentifier(pattern);
+
+    if (pattern.elem === undefined) {
+        statement = 'object.elem === undefined && ' + statement;
+    }
 
     var composedFunction = 'return ' + statement + ';';
 
