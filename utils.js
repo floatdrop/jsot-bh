@@ -1,128 +1,24 @@
 var Utils = {};
 
-var _optJsAttrIsJs = 'onclick';
-var _defaultTag = 'div';
+Utils.patchContentElements = function patchContentElements(object) {
+    if (object.block && object.content) { return; }
 
-function unwrapMixedBlocks(json) {
-    if (json.mix) {
-        var mixes = json.mix;
-        for (var i = 0; i < mixes.length; i++) {
-            var mix = mixes[i];
-            if (mix && mix.js) {
-                mix.js = mix.js === true ? {} : mix.js;
-                json.jsParams[(mix.block || json.block) + (mix.elem ? '__' + mix.elem : '')] = mix.js;
-                json.hasMixJsParams = true;
+    if (typeof object.content === 'object' && object.content.elem) {
+        object.content.block = object.block;
+        if (object.mods) { object.content.mods = object.mods; }
+    }
+
+    if (Array.isArray(object.content)) {
+        for (var i = object.content.length - 1; i >= 0; i--) {
+            if (object.content[i].elem) {
+                object.content[i].block = object.block;
+                if (object.mods) {
+                    object.content[i].mods = object.mods;
+                }
             }
         }
     }
-}
-
-Utils.bemClasses = function(json, block) {
-    block = json.block || block;
-    if (json.bem === false || !block) { return ''; }
-
-    var base = block + (json.elem ? '__' + json.elem : '');
-    var res = base; // (base === json.block) ? '' : base
-    var mods = json.mods || json.elem && json.elemMods;
-
-    for (var i in mods) {
-        res += (res ? ' ' : '') + base + '_' + i + (mods[i] === true ? '' : '_' + mods[i]);
-    }
-
-    if (json.mix) {
-        for (var i = 0; i < json.mix.length; i++) {
-            res += ' ' + Utils.bemClasses(json.mix[i], json.block);
-        }
-    }
-
-    return res;
 };
-
-function classes(json) {
-    var bemClasses = Utils.bemClasses(json, json.block);
-    var iBemClass = json.hasJsParams && 'i-bem';
-    var res = [bemClasses, json.cls, iBemClass].filter(Boolean).join(' ');
-    if (res === '') { return res; }
-    return ' class="' + escape(res) + '"';
-}
-
-function attributes(json) {
-    if (!json.attrs) { return ''; }
-
-    var attrs = '';
-
-    for (var key in json.attrs) {
-        var value = json.attrs[key];
-        if (value === null) { continue; }
-        attrs += ' ' + key + '="' + escape(value) + '"';
-    }
-
-    return attrs;
-}
-
-Utils.renderHtmlBlock = function (json) {
-    if (typeof json !== 'object') { return json; }
-
-    json.tag = json.tag || _defaultTag;
-    json.content = json.content || '';
-    json.jsParams = {};
-    json.js = json.js === true ? {} : json.js;
-    json.attrs = json.attrs || {};
-
-    if (json.mix && !Array.isArray(json.mix)) {
-        json.mix = [json.mix];
-    }
-
-    if (json.js) {
-        json.jsParams[json.block + (json.elem ? '__' + json.elem : '')] = json.js;
-    }
-
-    unwrapMixedBlocks(json);
-    var jsData = JSON.stringify(json.jsParams);
-    json.attrs[json.jsAttr || _optJsAttrIsJs] = (this._optJsAttrIsJs ? 'return ' + jsData : jsData);
-
-    var res = '<' + json.tag + classes(json) + attributes(json);
-    if (selfCloseHtmlTags[json.tag]) { return res + '/>'; }
-    return res + '>' + json.content + '</' + json.tag + '>';
-};
-
-var escapeMap = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
-var badChars = /[&<>"]/g;
-var possible = /[&<>"]/;
-
-var escapeChar = function(chr) {
-    return escapeMap[chr] || chr;
-};
-
-function escape(string) {
-    if (string === null || string === false) {
-        return '';
-    }
-
-    if(!possible.test(string)) { return string; }
-    return string.replace(badChars, escapeChar);
-}
-
-var selfCloseHtmlTags = {
-    area: 1,
-    base: 1,
-    br: 1,
-    col: 1,
-    command: 1,
-    embed: 1,
-    hr: 1,
-    img: 1,
-    input: 1,
-    keygen: 1,
-    link: 1,
-    menuitem: 1,
-    meta: 1,
-    param: 1,
-    source: 1,
-    track: 1,
-    wbr: 1
-};
-
 
 Utils.setPropertyKeyValueObject = function (name) {
     return function scopedSPKVO(values, force) {

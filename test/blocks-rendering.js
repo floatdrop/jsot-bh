@@ -10,7 +10,7 @@ describe('block rendering', function () {
 
         jsotbh
             .apply({ block: 'html' })
-            .should.equal('<html></html>');
+            .should.equal('<html class=\"html\"></html>');
     });
 
     it('should render block with content blocks', function () {
@@ -19,7 +19,7 @@ describe('block rendering', function () {
 
         jsotbh
             .apply({ block: 'html', content: [ { block: 'p' }, { block: 'p' } ] })
-            .should.equal('<div><p></p><p></p></div>');
+            .should.equal('<div class=\"html\"><p class=\"p\"></p><p class=\"p\"></p></div>');
     });
 
     it('should render block with content blocks', function () {
@@ -29,6 +29,6 @@ describe('block rendering', function () {
 
         jsotbh
             .apply({ block: 'html', content: [ { block: 'p' }, { block: 'p' } ] })
-            .should.equal('<html><p></p><p></p></html>');
+            .should.equal('<html class=\"html\"><p class=\"p\"></p><p class=\"p\"></p></html>');
     });
 });

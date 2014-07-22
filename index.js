@@ -1,5 +1,6 @@
 var Utils = require('./utils.js');
 var lastGenId = 0;
+var serialize = require('bemjson-to-html');
 
 function JSOTBH() {
     this._matchers = [];
@@ -39,7 +40,7 @@ JSOTBH.prototype.apply = function apply(json) {
     }
 
     if (typeof json === 'object') {
-        patchContentElements(json);
+        Utils.patchContentElements(json);
         return this.processObject(json);
     }
 };
@@ -60,7 +61,7 @@ JSOTBH.prototype.processObject = function processObject(object) {
         if (this._patterns[m](object)) {
             this._current.element = object;
             var result = this._matchers[m](object);
-            if (result) { return this.apply(result); }
+            if (result) { break; }
         }
     }
 
@@ -68,7 +69,7 @@ JSOTBH.prototype.processObject = function processObject(object) {
         object.content = this.apply(object.content);
     }
 
-    return this.toHtml(object);
+    return serialize(object);
 };
 
 function escapeIdentifier (id) {
@@ -106,27 +107,6 @@ JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     /*jshint -W054*/ /* Yes, this is eval */
     return new Function('object', composedFunction);
 };
-
-function patchContentElements(object) {
-    if (object.block && object.content) {
-        if (typeof object.content === 'object' && object.content.elem) {
-            object.content.block = object.block;
-            if (object.mods) { object.content.mods = object.mods; }
-        }
-        if (Array.isArray(object.content)) {
-            for (var i = object.content.length - 1; i >= 0; i--) {
-                if (object.content[i].elem) {
-                    object.content[i].block = object.block;
-                    if (object.mods) {
-                        object.content[i].mods = object.mods;
-                    }
-                }
-            }
-        }
-    }
-}
-
-JSOTBH.prototype.toHtml = Utils.renderHtmlBlock;
 
 JSOTBH.prototype.generateId = function generateId() {
     lastGenId += 1;

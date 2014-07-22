@@ -33,6 +33,6 @@
     "should": "^4.0.4"
   },
   "dependencies": {
-    "jsot": "^0.2.2"
+    "bemjson-to-html": "0.0.5"
   }
 }

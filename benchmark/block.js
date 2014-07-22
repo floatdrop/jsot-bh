@@ -6,7 +6,7 @@ console.log('Benchmarking block matching...');
 
 var JSOT = require('jsot');
 var jsot = new JSOT();
-jsot.match({ block: 'block' }, function () { return '<block></block>'; });
+jsot.match({ block: 'block' }, function () { return '<block>' + this.content + '</block>'; });
 
 var JSOTBH = require('..');
 var jsotbh = new JSOTBH();

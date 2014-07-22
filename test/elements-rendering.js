@@ -13,7 +13,7 @@ describe('element matching', function () {
 
         jsotbh
             .apply({ block: 'html', content: { elem: 'body' } })
-            .should.equal('<html><body></body></html>');
+            .should.equal('<html class=\"html\"><body class="html__body"></body></html>');
     });
 
     it('should match on block with element in content array', function () {
@@ -28,7 +28,7 @@ describe('element matching', function () {
 
         jsotbh
             .apply({ block: 'html', content: [{ elem: 'body' }, { elem: 'surprise' }] })
-            .should.equal('<html><body></body><div></div></html>');
+            .should.equal('<html class=\"html\"><body class="html__body"></body><div></div></html>');
     });
 
     it('should match on block with element with mods in content', function () {
@@ -41,15 +41,15 @@ describe('element matching', function () {
 
         jsotbh
             .apply({ block: 'ul', content: { elem: 'li', elemMods: { hot: 'yes' } } })
-            .should.equal('<ul><li hot="yes"></li></ul>');
+            .should.equal('<ul class="ul"><li class="ul__li" hot="yes"></li></ul>');
     });
 
     it('should match on block with element with mods in content array', function () {
         var jsotbh = new JSOTBH();
-        jsotbh.match('ul', function (ctx, json) {
+        jsotbh.match('ul', function (ctx) {
             ctx.tag('ul');
         });
-        jsotbh.match('ul__li_hot_yes', function (ctx, json) {
+        jsotbh.match('ul__li_hot_yes', function (ctx) {
             ctx.tag('li');
             ctx.attr('hot', 'yes');
         });
@@ -59,6 +59,6 @@ describe('element matching', function () {
                 { elem: 'li', elemMods: { hot: 'yes' } },
                 { elem: 'li' }
             ]})
-            .should.equal('<ul><li hot="yes"></li><div></div></ul>');
+            .should.equal('<ul class="ul"><li class="ul__li" hot="yes"></li><div></div></ul>');
     });
 });
