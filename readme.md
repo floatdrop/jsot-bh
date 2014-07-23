@@ -2,6 +2,10 @@
 
 This is modification of [JSOT](https://github.com/floatdrop/jsot) template engine, which provides BH matchers and some other things.
 
+## Migration notice
+
+ * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
+
 ## TODO:
 
  * [ ] Backwards compatibility testing
