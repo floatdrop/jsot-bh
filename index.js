@@ -3,6 +3,15 @@ var lastGenId = 0;
 var serialize = require('bemjson-to-html');
 var Context = require('snap-context');
 
+function defineContextMethod(object, method, func) {
+    Object.defineProperty(object, method, {
+        value: func,
+        configurable : false,
+        enumerable : false,
+        writable : false
+    });
+}
+
 function JSOTBH() {
     this._matchers = {};
     this._patterns = {};
@@ -35,18 +44,18 @@ function JSOTBH() {
         this._stopFlag = true;
     };
 
-    this.attr = Utils.setPropertyKeyValue.bind(this)('attrs');
-    this.attrs = Utils.setPropertyKeyValueObject.bind(this)('attrs');
-    this.bem = Utils.setPropertyValue.bind(this)('bem');
-    this.cls = Utils.setPropertyValue.bind(this)('cls');
-    this.content = Utils.setPropertyValue.bind(this)('content');
-    this.extend = Utils.extend;
-    this.js = Utils.setPropertyValue.bind(this)('js');
-    this.param = Utils.setPropertyValue.bind(this);
-    this.tag = Utils.setPropertyValue.bind(this)('tag');
-    this.mix = Utils.setPropertyArray.bind(this)('mix');
-    this.mod = Utils.setPropertyKeyValue.bind(this)('mods');
-    this.mods = Utils.setPropertyKeyValueObject.bind(this)('mods');
+    defineContextMethod(this, 'attr', Utils.setPropertyKeyValue.bind(this)('attrs'));
+    defineContextMethod(this, 'attrs', Utils.setPropertyKeyValueObject.bind(this)('attrs'));
+    defineContextMethod(this, 'bem', Utils.setPropertyValue.bind(this)('bem'));
+    defineContextMethod(this, 'cls', Utils.setPropertyValue.bind(this)('cls'));
+    defineContextMethod(this, 'content', Utils.setPropertyValue.bind(this)('content'));
+    defineContextMethod(this, 'extend', Utils.extend);
+    defineContextMethod(this, 'js', Utils.setPropertyValue.bind(this)('js'));
+    defineContextMethod(this, 'param', Utils.setPropertyValue.bind(this));
+    defineContextMethod(this, 'tag', Utils.setPropertyValue.bind(this)('tag'));
+    defineContextMethod(this, 'mix', Utils.setPropertyArray.bind(this)('mix'));
+    defineContextMethod(this, 'mod', Utils.setPropertyKeyValue.bind(this)('mods'));
+    defineContextMethod(this, 'mods', Utils.setPropertyKeyValueObject.bind(this)('mods'));
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
