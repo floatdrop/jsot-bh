@@ -2,6 +2,7 @@ var Utils = require('./utils.js');
 var lastGenId = 0;
 var serialize = require('bemjson-to-html');
 var Context = require('snap-context');
+var matcher = require('object-match-statement');
 
 function defineContextMethod(object, method, func) {
     Object.defineProperty(object, method, {
@@ -26,7 +27,6 @@ function JSOTBH() {
         this.applyMatchers(
             this._matchers[block],
             this._patterns[block],
-            this._current.element,
             this._current.matcherIdx - 1
         );
         this.stop();
@@ -68,6 +68,10 @@ JSOTBH.prototype.match = function match(pattern, callback) {
     this._patterns[parsedPattern.block].push(this.compilePattern(parsedPattern));
 };
 
+JSOTBH.prototype.apply = function apply(json) {
+    return serialize(this.process(json));
+};
+
 JSOTBH.prototype.process = function process(json) {
     if (typeof json === 'string') {
         return json;
@@ -78,9 +82,8 @@ JSOTBH.prototype.process = function process(json) {
     }
 
     if (typeof json === 'object') {
-        if (!json.block) { return this.processObject(json, 0); }
-
-        this._context.set('block', json.block);
+        if (json.block) { this._context.set('block', json.block); } else { json.block = this._context.get('block'); }
+        this._context.set('object', json);
         this._context.snapshot();
         var result = this.processObject(json);
         this._context.restore();
@@ -88,8 +91,34 @@ JSOTBH.prototype.process = function process(json) {
     }
 };
 
-JSOTBH.prototype.apply = function apply(json) {
-    return serialize(this.process(json));
+JSOTBH.prototype.processObject = function processObject() {
+    var block = this._context.get('block');
+    var matchersForBlock = this._matchers[block];
+    if (matchersForBlock) {
+        this.applyMatchers(matchersForBlock, this._patterns[block]);
+    }
+
+    var object = this._context.get('object');
+
+    if (object.content) {
+        object.content = this.apply(object.content);
+    }
+
+    return object;
+};
+
+JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, startFrom) {
+    var object = this._context.get('object');
+    if (startFrom === undefined) { startFrom = matchers.length - 1; }
+    for (var m = startFrom; m >= 0 ; m--) {
+        if (patterns[m](object)) {
+            this._current.matcherIdx = m;
+            var result = matchers[m](this._context.get('object'));
+            if (result) { this._context.set('object', result); }
+            if (this._stopFlag) { break; }
+        }
+    }
+    this._stopFlag = false;
 };
 
 JSOTBH.prototype.processArray = function processArray(array) {
@@ -102,64 +131,9 @@ JSOTBH.prototype.processArray = function processArray(array) {
     return result;
 };
 
-JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, object, startFrom) {
-    if (startFrom === undefined) { startFrom = matchers.length - 1; }
-    for (var m = startFrom; m >= 0 ; m--) {
-        if (patterns[m](object)) {
-            this._current.element = object;
-            this._current.matcherIdx = m;
-            matchers[m](object);
-            if (this._stopFlag) { break; }
-        }
-    }
-    this._stopFlag = false;
-};
-
-JSOTBH.prototype.processObject = function processObject(object) {
-    var block = this._context.get('block');
-    if (object.elem) { object.block = object.block || block; }
-    var matchersForBlock = this._matchers[block];
-
-    if (matchersForBlock) {
-        this.applyMatchers(matchersForBlock, this._patterns[block], object);
-    }
-
-    if (object.content) {
-        object.content = this.apply(object.content);
-    }
-
-    return object;
-};
-
-function escapeIdentifier (id) {
-    if (/^[$A-Z\_a-z][$_0-9A-Za-z]*$/.test(id)) {
-        return '.' + id;
-    }
-    return '["' + id + '"]';
-}
-
-function buildCompareStatement (prefix, object) {
-    var statement = [];
-
-    for (var key in object) {
-        var nextPrefix = prefix + escapeIdentifier(key);
-        if (typeof object[key] === 'object') {
-            statement.push(nextPrefix);
-            statement.push(buildCompareStatement(nextPrefix, object[key]));
-        } else if (typeof object[key] === 'string') {
-            statement.push(nextPrefix + ' === "' + object[key] + '"');
-        } else {
-            statement.push(nextPrefix + ' === ' + object[key]);
-        }
-    }
-
-    return statement.join(' && ');
-}
-
 JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     var statement = typeof pattern !== 'string' ?
-        buildCompareStatement('object', pattern) :
-        'object' + escapeIdentifier(pattern);
+        matcher.build('object', pattern) : 'object' + matcher.escape(pattern);
 
     if (pattern.elem === undefined) {
         statement = 'object.elem === undefined && ' + statement;
@@ -191,7 +165,7 @@ JSOTBH.prototype.isSimple = function isSimple(obj) {
 };
 
 JSOTBH.prototype.json = function json() {
-    return this._current.element;
+    return this._context.get('object');
 };
 
 JSOTBH.prototype.length = function length() {

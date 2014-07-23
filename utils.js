@@ -2,67 +2,67 @@ var Utils = {};
 
 Utils.setPropertyKeyValueObject = function (name) {
     return function scopedSPKVO(values, force) {
-        if (!values) { return this._current.element[name]; }
+        if (!values) { return this._context.get('object')[name]; }
 
         for (var key in values) {
             Utils.setPropertyKeyValue(name)(key, values[key], force);
         }
 
-        return this._current.element;
+        return this._context.get('object');
     };
 };
 
 Utils.setPropertyArray = function setPropertyArray(name) {
     return function scopedSPA(value, force) {
         if (force) {
-            this._current.element[name] = value;
+            this._context.get('object')[name] = value;
             return this;
         }
 
         if (value !== undefined) {
-            if (this._current.element[name]) {
-                this._current.element[name] = Array.isArray(this._current.element[name]) ?
-                    this._current.element[name].concat(value) :
-                    [this._current.element[name]].concat(value);
+            if (this._context.get('object')[name]) {
+                this._context.get('object')[name] = Array.isArray(this._context.get('object')[name]) ?
+                    this._context.get('object')[name].concat(value) :
+                    [this._context.get('object')[name]].concat(value);
             } else {
-                this._current.element[name] = value;
+                this._context.get('object')[name] = value;
             }
 
             return this;
         }
 
-        return this._current.element[name];
+        return this._context.get('object')[name];
     };
 };
 
 Utils.setPropertyValue = function setPropertyValue(name) {
     return function scopedSPV(value) {
         if (value) {
-            this._current.element[name] = value;
+            this._context.get('object')[name] = value;
             return this;
         }
 
-        return this._current.element[name];
+        return this._context.get('object')[name];
     }.bind(this);
 };
 
 Utils.setPropertyKeyValue = function setPropertyKeyValue(name) {
     return function scopedSPKV(key, value, force) {
-        this._current.element[name] = this._current.element[name] || {};
+        this._context.get('object')[name] = this._context.get('object')[name] || {};
 
         if (force) {
-            this._current.element[name][key] = value;
+            this._context.get('object')[name][key] = value;
             return this;
         }
 
         if (value) {
-            this._current.element[name][key] =
-                this._current.element[name][key] === undefined ?
-                    value : this._current.element[name][key];
+            this._context.get('object')[name][key] =
+                this._context.get('object')[name][key] === undefined ?
+                    value : this._context.get('object')[name][key];
             return this;
         }
 
-        return this._current.element[name][key];
+        return this._context.get('object')[name][key];
     };
 };
 
