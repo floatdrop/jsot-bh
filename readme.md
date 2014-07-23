@@ -1,11 +1,12 @@
 # JSOT-BH [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
-This is wrapper around [JSOT](https://github.com/floatdrop/jsot) template engine, that provides BH matchers and some other things.
+This is modification of [JSOT](https://github.com/floatdrop/jsot) template engine, which provides BH matchers and some other things.
 
 ## TODO:
 
  * [ ] Backwards compatibility testing
  * [ ] Return object from matcher should be interpreted like new bemjson
+ * [ ] 100% coverage
 
 ## API
 
