@@ -16,6 +16,10 @@ var BH = require('bh').BH;
 var bh = new BH();
 bh.match('block_disabled_yes', function (ctx) { ctx.tag('block'); ctx.attr('disabled', 'yes'); });
 
+var BT = require('enb-bt').BT;
+var bt = new BT();
+bt.match('block_disabled_yes', function (ctx) { ctx.setTag('block'); ctx.setAttr('disabled', 'yes'); });
+
 suite
 .add('jsot#block_mod', function() {
     jsot.apply({ block: 'block', mods: { disabled: 'yes' } });
@@ -25,6 +29,9 @@ suite
 })
 .add('bh#block_mod', function() {
     bh.apply({ block: 'block', mods: { disabled: 'yes' } });
+})
+.add('bt#block_mod', function() {
+    bt.apply({ block: 'block', mods: { disabled: 'yes' } });
 })
 
 .on('cycle', function(event) { benchmarks.add(event.target); })

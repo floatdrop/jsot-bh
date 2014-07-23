@@ -16,6 +16,10 @@ var BH = require('bh').BH;
 var bh = new BH();
 bh.match('block', function (ctx) { ctx.tag('block'); });
 
+var BT = require('enb-bt').BT;
+var bt = new BT();
+bt.match('block', function (ctx) { ctx.setTag('block'); });
+
 suite
 .add('jsot#block', function() {
     jsot.apply({ block: 'block' });
@@ -26,6 +30,10 @@ suite
 .add('bh#block', function() {
     bh.apply({ block: 'block' });
 })
+.add('bt#block', function() {
+    bt.apply({ block: 'block' });
+})
+
 
 .on('cycle', function(event) { benchmarks.add(event.target); })
 .on('complete', function() { benchmarks.log(); })

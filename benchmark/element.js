@@ -19,6 +19,11 @@ var bh = new BH();
 bh.match('block', function (ctx) { ctx.tag('block'); });
 bh.match('block__elem', function (ctx) { ctx.tag('elem'); });
 
+var BT = require('enb-bt').BT;
+var bt = new BT();
+bt.match('block', function (ctx) { ctx.setTag('block'); });
+bt.match('block__elem', function (ctx) { ctx.setTag('elem'); });
+
 suite
 .add('jsot#block__elem', function() {
     jsot.apply({ block: 'block', content: [{ block: 'block', elem: 'elem' }] });
@@ -28,6 +33,9 @@ suite
 })
 .add('bh#block__elem', function() {
     bh.apply({ block: 'block', content: [{ elem: 'elem' }] });
+})
+.add('bt#block__elem', function() {
+    bt.apply({ block: 'block', content: [{ elem: 'elem' }] });
 })
 
 .on('cycle', function(event) { benchmarks.add(event.target); })
