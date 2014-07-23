@@ -48,21 +48,24 @@ Utils.setPropertyValue = function setPropertyValue(name) {
 
 Utils.setPropertyKeyValue = function setPropertyKeyValue(name) {
     return function scopedSPKV(key, value, force) {
-        this._context.get('object')[name] = this._context.get('object')[name] || {};
+        var object = this._context.get('object');
+        var property = (object[name] = object[name] || {});
 
         if (force) {
-            this._context.get('object')[name][key] = value;
+            property[key] = value;
             return this;
         }
 
-        if (value) {
-            this._context.get('object')[name][key] =
-                this._context.get('object')[name][key] === undefined ?
-                    value : this._context.get('object')[name][key];
+        if (arguments.length > 1) {
+            if (value === undefined) {
+                delete property[key];
+            } else if (!property.hasOwnProperty(key)) {
+                property[key] = value;
+            }
             return this;
         }
 
-        return this._context.get('object')[name][key];
+        return property[key];
     };
 };
 

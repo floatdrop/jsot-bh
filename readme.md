@@ -5,6 +5,8 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
 ## Migration notice
 
  * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
+ * Last defined matcher is applyed first (this should be fixed in #4)
+ * Calling attr (or call to similar set method) with `undefined` argument as a value will erase this attribute from attributes (but `null` is ok). 
 
 ## TODO:
 
