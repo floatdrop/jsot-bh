@@ -100,6 +100,7 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, obje
 
 JSOTBH.prototype.processObject = function processObject(object) {
     var block = this._context.get('block');
+    if (object.elem) { object.block = object.block || block; }
     var matchersForBlock = this._matchers[block];
 
     if (matchersForBlock) {
