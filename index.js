@@ -13,7 +13,13 @@ function JSOTBH() {
     this._milliseconds = new Date().getTime().toString();
 
     this.applyBase = function () {
-        this.processObject(this._current.element, this._current.matcherIdx - 1);
+        var block = this._context.get('block');
+        this.applyMatchers(
+            this._matchers[block],
+            this._patterns[block],
+            this._current.element,
+            this._current.matcherIdx - 1
+        );
         this.stop();
     };
 
@@ -79,21 +85,25 @@ JSOTBH.prototype.processArray = function processArray(array) {
     return result;
 };
 
-JSOTBH.prototype.processObject = function processObject(object, startFrom) {
-    var block = this._context.get('block')
+JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, object, startFrom) {
+    if (startFrom === undefined) { startFrom = matchers.length - 1; }
+    for (var m = startFrom; m >= 0 ; m--) {
+        if (patterns[m](object)) {
+            this._current.element = object;
+            this._current.matcherIdx = m;
+            matchers[m](object);
+            if (this._stopFlag) { break; }
+        }
+    }
+    this._stopFlag = false;
+};
+
+JSOTBH.prototype.processObject = function processObject(object) {
+    var block = this._context.get('block');
     var matchersForBlock = this._matchers[block];
 
     if (matchersForBlock) {
-        var patternsForBlock = this._patterns[block];
-        for (var m = matchersForBlock.length - 1; m >= 0 ; m--) {
-            if (patternsForBlock[m](object)) {
-                this._current.element = object;
-                this._current.matcherIdx = m;
-                var result = matchersForBlock[m](object);
-                if (result) { break; }
-                if (this._stopFlag) { this._stopFlag = false; break; }
-            }
-        }
+        this.applyMatchers(matchersForBlock, this._patterns[block], object);
     }
 
     if (object.content) {
