@@ -88,6 +88,8 @@ JSOTBH.prototype.process = function process(json) {
         var result = this.processObject(json);
         this._context.restore();
         return result;
+    } else {
+        return json.toString();
     }
 };
 
@@ -100,7 +102,7 @@ JSOTBH.prototype.processObject = function processObject() {
 
     var object = this._context.get('object');
 
-    if (object.content) {
+    if (object.content !== undefined) {
         object.content = this.apply(object.content);
     }
 

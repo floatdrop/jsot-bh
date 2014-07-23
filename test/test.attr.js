@@ -44,7 +44,7 @@ describe('ctx.attr()', function() {
                 type: 'link',
                 disabled: undefined
             }
-        }).should.equal('<div class="button" type="link"></div>');
+        }).should.equal('<div class="button" type="link" disabled="undefined"></div>');
     });
 
     it('should not override later declarations', function() {
@@ -78,6 +78,6 @@ describe('ctx.attr()', function() {
                 type: 'link',
                 disabled: 'disabled'
             }
-        }).should.equal('<div class="button" type="button"></div>');
+        }).should.equal('<div class="button" type="button" disabled="undefined"></div>');
     });
 });

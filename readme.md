@@ -7,10 +7,12 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
  * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
  * Last defined matcher is applyed first (this should be fixed in #4)
  * Calling attr (or call to similar set method) with `undefined` argument as a value will erase this attribute from attributes (but `null` is ok). 
+ * bemjson-to-html renders undefined attributes (which are in bemjson, but with value `undefined`)
+ * BEM identifier should not contain `\\"` parts, but can contain `"`.
 
 ## TODO:
 
- * [ ] Backwards compatibility testing
+ * [ ] Backwards compatibility testing (92 / 150 tests from BH are green)
  * [ ] Return object from matcher should be interpreted like new bemjson
  * [ ] 100% coverage
 

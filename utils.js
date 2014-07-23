@@ -2,12 +2,11 @@ var Utils = {};
 
 Utils.setPropertyKeyValueObject = function (name) {
     return function scopedSPKVO(values, force) {
-        if (!values) { return this._context.get('object')[name]; }
-
+        if (!values) { return this._context.get('object')[name] || {}; }
+        var f = Utils.setPropertyKeyValue(name);
         for (var key in values) {
-            Utils.setPropertyKeyValue(name)(key, values[key], force);
+            f.call(this, key, values[key], force);
         }
-
         return this._context.get('object');
     };
 };
@@ -36,13 +35,16 @@ Utils.setPropertyArray = function setPropertyArray(name) {
 };
 
 Utils.setPropertyValue = function setPropertyValue(name) {
-    return function scopedSPV(value) {
-        if (value) {
-            this._context.get('object')[name] = value;
+    return function scopedSPV(value, force) {
+        var object = this._context.get('object');
+        if (arguments.length > 0) {
+            if (force || !object.hasOwnProperty(name)) {
+                object[name] = value;
+            }
             return this;
         }
 
-        return this._context.get('object')[name];
+        return object[name];
     }.bind(this);
 };
 
