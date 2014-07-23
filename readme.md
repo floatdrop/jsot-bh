@@ -2,18 +2,14 @@
 
 This is wrapper around [JSOT](https://github.com/floatdrop/jsot) template engine, that provides BH matchers and some other things.
 
+## TODO:
+
+ * [ ] Backwards compatibility testing
+ * [ ] Return object from matcher should be interpreted like new bemjson
+
 ## API
 
-Context methods should correspond to [BH](https://github.com/enb-make/bh#%D0%9A%D0%BB%D0%B0%D1%81%D1%81-ctx) specification:
-
-Current status:
-
- * [x] apply
- * [x] applyBase
- * [x] Setters/getters (attr, attrs, bem, cls, content, generateId, position, position, length, isFirst, isLast, isSimple, js, json, mix, mod, mods, param, tag)
- * [x] extend
- * [x] stop
- * [ ] tParam
+Context methods is similar to [BH](https://github.com/enb-make/bh#%D0%9A%D0%BB%D0%B0%D1%81%D1%81-ctx) specification.
 
 ## Usage
 

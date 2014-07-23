@@ -23,6 +23,14 @@ function JSOTBH() {
         this.stop();
     };
 
+    this.tParam = function (key, value) {
+        if (value) {
+            this._context.set(key, value);
+            return value;
+        }
+        return this._context.get(key);
+    };
+
     this.stop = function () {
         this._stopFlag = true;
     };
