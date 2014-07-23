@@ -12,7 +12,6 @@ describe('applyBase', function () {
     it('should apply templates for new mod', function() {
         jsotbh.match('button', function(ctx,json) {
             ctx.mod('type', 'span');
-            console.log(json);
         });
         jsotbh.match('button_type_span', function(ctx) {
             ctx.tag('span');
@@ -51,19 +50,19 @@ describe('applyBase', function () {
 
     it('should apply base matcher while wrapping', function() {
         jsotbh.match('button', function(ctx) {
-            return [
+            ctx.content([
                 { elem: 'base-before' },
                 ctx.json(),
                 { elem: 'base-after' }
-            ];
+            ]);
         });
         jsotbh.match('button', function(ctx) {
             ctx.applyBase();
-            return [
+            ctx.content([
                 { elem: 'before' },
                 ctx.json(),
                 { elem: 'after' }
-            ];
+            ]);
         });
         jsotbh.apply({ block: 'button', content: 'Hello' }).should.equal(
             '<div class="button__before"></div>' +

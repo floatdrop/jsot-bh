@@ -1,17 +1,19 @@
 var Utils = require('./utils.js');
 var lastGenId = 0;
 var serialize = require('bemjson-to-html');
+var Context = require('snap-context');
 
 function JSOTBH() {
     this._matchers = {};
     this._patterns = {};
 
     this._current = { length: -1, position: -1, matcherIdx: -1 };
+    this._context = new Context();
 
     this._milliseconds = new Date().getTime().toString();
 
     this.applyBase = function () {
-        this.processObject(this._current.element, this._current.matcherIdx + 1);
+        this.processObject(this._current.element, this._current.matcherIdx - 1);
         this.stop();
     };
 
@@ -53,8 +55,13 @@ JSOTBH.prototype.process = function process(json) {
     }
 
     if (typeof json === 'object') {
-        Utils.patchContentElements(json, json.block);
-        return this.processObject(json, 0);
+        if (!json.block) { return this.processObject(json, 0); }
+
+        this._context.set('block', json.block);
+        this._context.snapshot();
+        var result = this.processObject(json);
+        this._context.restore();
+        return result;
     }
 };
 
@@ -73,11 +80,12 @@ JSOTBH.prototype.processArray = function processArray(array) {
 };
 
 JSOTBH.prototype.processObject = function processObject(object, startFrom) {
-    var matchersForBlock = this._matchers[object.block];
+    var block = this._context.get('block')
+    var matchersForBlock = this._matchers[block];
 
     if (matchersForBlock) {
-        var patternsForBlock = this._patterns[object.block];
-        for (var m = startFrom; m < matchersForBlock.length; m++) {
+        var patternsForBlock = this._patterns[block];
+        for (var m = matchersForBlock.length - 1; m >= 0 ; m--) {
             if (patternsForBlock[m](object)) {
                 this._current.element = object;
                 this._current.matcherIdx = m;

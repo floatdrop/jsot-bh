@@ -1,28 +1,5 @@
 var Utils = {};
 
-Utils.patchContentElements = function patchContentElements(object, block) {
-    block = object.block || block;
-    if (!block || !object.content) { return object; }
-
-    if (typeof object.content === 'object' && object.content.elem) {
-        object.content.block = object.block;
-        if (object.mods) { object.content.mods = object.mods; }
-    }
-
-    if (Array.isArray(object.content)) {
-        for (var i = object.content.length - 1; i >= 0; i--) {
-            if (object.content[i].elem) {
-                object.content[i].block = object.block;
-                if (object.mods) {
-                    object.content[i].mods = object.mods;
-                }
-            }
-        }
-    }
-
-    return object;
-};
-
 Utils.setPropertyKeyValueObject = function (name) {
     return function scopedSPKVO(values, force) {
         if (!values) { return this._current.element[name]; }
