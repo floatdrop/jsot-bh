@@ -33,7 +33,7 @@
     "should": "^4.0.4"
   },
   "dependencies": {
-    "bemjson-to-html": "0.0.5",
+    "bemjson-to-html": "^0.1.0",
     "snap-context": "~1.0.0"
   }
 }
