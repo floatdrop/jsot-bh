@@ -23,19 +23,19 @@ Context methods is similar to [BH](https://github.com/enb-make/bh#%D0%9A%D0%BB%D
 ## Usage
 
 ```js
-var JSOTBH = require('jsot-bh');
+var JSOTBH = require('./index.js');
 var jsotbh = new JSOTBH();
 
-jsotbh.match('html', function (context, json) {
-    return '<html>' + context.apply(json.content) + '</html>';
+jsotbh.match('html', function (ctx) {
+    ctx.tag('html');
 });
 
-jsotbh.match('p', function (context, json) {
-    return '<p>' + context.apply(json.content) + '</p>';
+jsotbh.match('p', function (ctx) {
+    ctx.tag('p');
 });
 
-jsotbh.match('p_bold_yes', function (context, json) {
-    return '<p><b>' + context.apply(json.content) + '</b></p>';
+jsotbh.match('p_bold_yes', function (ctx) {
+    ctx.cls('boldy');
 });
 
 console.log(
@@ -43,12 +43,12 @@ console.log(
         block: 'html',
         content: [
             { block: 'p', content: 'You' },
-            { block: 'p', blockMods: { bold: 'yes' }, content: 'Rock!' }
+            { block: 'p', mods: { bold: 'yes' }, content: 'Rock!' }
         ]
     })
 );
 
-// should output: '<html><p>You</p><p><b>Rock!</b></p></html>'
+// should output: '<html class="html"><p class="p">You</p><p class="p p_bold_yes boldy">Rock!</p></html>'
 ```
 
 ## Benchmark
