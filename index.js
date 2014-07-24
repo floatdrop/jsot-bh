@@ -40,6 +40,10 @@ function defineContextMethod(object, method, func) {
 }
 
 function JSOTBH() {
+    this._options = {
+        jsAttrName: 'onclick',
+    };
+
     this._matchers = {};
     this._patterns = {};
 
@@ -99,7 +103,7 @@ JSOTBH.prototype.match = function match(pattern, callback) {
 };
 
 JSOTBH.prototype.apply = function apply(json) {
-    return serialize(this.process(json));
+    return serialize(this.process(json), this._options);
 };
 
 JSOTBH.prototype.process = function process(json) {
@@ -215,6 +219,14 @@ JSOTBH.prototype.isSimple = function(obj) {
     if (!obj || obj === true) { return true; }
     var t = typeof obj;
     return t === 'string' || t === 'number';
+};
+
+JSOTBH.prototype.setOptions = function (_options) {
+    this._options = Utils.extend(this._options, _options);
+};
+
+JSOTBH.prototype.getOptions = function () {
+    return this._options;
 };
 
 module.exports = JSOTBH;
