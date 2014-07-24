@@ -14,6 +14,7 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
  * ctx.position() for element, that not hosted in array returns -1.
  * Wrapping requires explicit specifiying block in elements: `[{ block: 'button', elem: 'before' }, ctx.json(), { block: 'button', elem: 'after' }]`
  * JSOTBH.match does not accept objects as "multiple" matchers definition, use chaining instead. 
+ * Loop detection deprecated.
 
 ## TODO:
 
