@@ -16,12 +16,6 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
  * JSOTBH.match does not accept objects as "multiple" matchers definition, use chaining instead. 
  * Loop detection deprecated.
 
-## TODO:
-
- * [x] Backwards compatibility testing
- * [x] Return object from matcher should be interpreted like new bemjson
- * [x] 100% coverage
-
 ## API
 
 Context methods is similar to [BH](https://github.com/enb-make/bh#%D0%9A%D0%BB%D0%B0%D1%81%D1%81-ctx) specification.
