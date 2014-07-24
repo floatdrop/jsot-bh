@@ -88,11 +88,25 @@ function JSOTBH() {
     });
     defineContextMethod(this, 'tag', Utils.setPropertyValue.bind(this)('tag'));
     defineContextMethod(this, 'mix', Utils.setPropertyArray.bind(this)('mix'));
-    defineContextMethod(this, 'mod', Utils.setPropertyKeyValue.bind(this)('mods'));
-    defineContextMethod(this, 'mods', Utils.setPropertyKeyValueObject.bind(this)('mods'));
+    defineContextMethod(this, 'mod', function () {
+        if (this._context.get('object').elem) {
+            return Utils.setPropertyKeyValue.bind(this)('elemMods').apply(this, arguments);
+        } else {
+            return Utils.setPropertyKeyValue.bind(this)('mods').apply(this, arguments);
+        }
+    });
+    defineContextMethod(this, 'mods', function () {
+        if (this._context.get('object').elem) {
+            return Utils.setPropertyKeyValueObject.bind(this)('elemMods').apply(this, arguments);
+        } else {
+            return Utils.setPropertyKeyValueObject.bind(this)('mods').apply(this, arguments);
+        }
+    });
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
+    if (typeof pattern !== 'string') { throw new Error('Pattern should be a string, not a ' + pattern); }
+
     var parsedPattern = Utils.parseBhIdentifier(pattern);
 
     this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || [];
@@ -100,6 +114,8 @@ JSOTBH.prototype.match = function match(pattern, callback) {
 
     this._patterns[parsedPattern.block] = this._patterns[parsedPattern.block] || [];
     this._patterns[parsedPattern.block].push(this.compilePattern(parsedPattern));
+
+    return this;
 };
 
 JSOTBH.prototype.apply = function apply(json) {
@@ -116,7 +132,8 @@ JSOTBH.prototype.process = function process(json) {
     }
 
     if (typeof json === 'object' && json) {
-        if (json.block) { this._context.set('block', json.block); } else { json.block = this._context.get('block'); }
+        if (json.block) { this._context.set('block', json.block); }
+        if (json.mods) { this._context.set('blockMods', json.mods); }
         this._context.set('object', json);
         this._context.snapshot();
         var result = this.processObject(json);
@@ -145,6 +162,11 @@ JSOTBH.prototype.processObject = function processObject() {
 
 JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, startFrom) {
     var object = this._context.get('object');
+    if (!object.block) {
+        object.block = this._context.get('block');
+        object.mods = this._context.get('blockMods');
+    }
+
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
     for (var m = startFrom; m >= 0 ; m--) {
         if (patterns[m](object)) {
