@@ -37,6 +37,14 @@ describe('ctx.mod()', function() {
         bh.apply({ block: 'button' }).should.equal('<div class="button button_type_button"></div>');
     });
 
+    it('should set mods in element', function() {
+        bh.match('button__text', function(ctx) {
+            ctx.mods({'type': 'bold'});
+        });
+        bh.apply({ block: 'button', content: { elem: 'text' } })
+        .should.equal('<div class="button"><div class="button__text button__text_type_bold"></div></div>');
+    });
+
     it('should set boolean mod', function() {
         bh.match('button', function(ctx) {
             ctx.mod('disabled', true);

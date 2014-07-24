@@ -1,34 +1,9 @@
 var Utils = require('./utils.js');
 var lastGenId = 0;
-var serialize = require('bemjson-to-html');
+var BEMJSON = require('bemjson-to-html');
 var Context = require('snap-context');
 var matcher = require('object-match-statement');
-
-/* Lodash implementation of flatten */
-function flatten(array) {
-    var index = -1,
-        length = array.length,
-        resIndex = 0,
-        result = [];
-
-    while (++index < length) {
-        var value = array[index];
-        if (Array.isArray(value)) {
-            value = flatten(value);
-
-            var valIndex = -1,
-            valLength = value.length;
-
-            result.length += valLength;
-            while (++valIndex < valLength) {
-                result[resIndex++] = value[valIndex];
-            }
-        } else {
-            result[resIndex++] = value;
-        }
-    }
-    return result;
-}
+var flatten = require('./flatten.js');
 
 function defineContextMethod(object, method, func) {
     Object.defineProperty(object, method, {
@@ -43,6 +18,8 @@ function JSOTBH() {
     this._options = {
         jsAttrName: 'onclick',
     };
+
+    this.bemjson = new BEMJSON(this._options);
 
     this._matchers = {};
     this._patterns = {};
@@ -119,7 +96,7 @@ JSOTBH.prototype.match = function match(pattern, callback) {
 };
 
 JSOTBH.prototype.apply = function apply(json) {
-    return serialize(this.process(json), this._options);
+    return this.bemjson.toHtml(this.process(json), this._options);
 };
 
 JSOTBH.prototype.process = function process(json) {
@@ -193,8 +170,7 @@ JSOTBH.prototype.processArray = function processArray(array) {
 };
 
 JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
-    var statement = typeof pattern !== 'string' ?
-        matcher.build('object', pattern) : 'object' + matcher.escape(pattern);
+    var statement = matcher.build('object', pattern);
 
     if (pattern.elem === undefined) {
         statement = 'object.elem === undefined && ' + statement;
@@ -219,12 +195,6 @@ JSOTBH.prototype.isLast = function isLast() {
     return this._current.position === this._current.length - 1;
 };
 
-JSOTBH.prototype.isSimple = function isSimple(obj) {
-    if (!obj || obj === true) { return true; }
-    var t = typeof obj;
-    return t === 'string' || t === 'number';
-};
-
 JSOTBH.prototype.json = function json() {
     return this._context.get('object');
 };
@@ -237,17 +207,18 @@ JSOTBH.prototype.position = function position() {
     return this._current.position;
 };
 
-JSOTBH.prototype.isSimple = function(obj) {
+JSOTBH.prototype.isSimple = function isSimple(obj) {
     if (!obj || obj === true) { return true; }
     var t = typeof obj;
     return t === 'string' || t === 'number';
 };
 
-JSOTBH.prototype.setOptions = function (_options) {
+JSOTBH.prototype.setOptions = function setOptions(_options) {
     this._options = Utils.extend(this._options, _options);
+    this.bemjson = new BEMJSON(this._options);
 };
 
-JSOTBH.prototype.getOptions = function () {
+JSOTBH.prototype.getOptions = function getOptions() {
     return this._options;
 };
 

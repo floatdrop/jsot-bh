@@ -20,7 +20,7 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
 
  * [x] Backwards compatibility testing
  * [x] Return object from matcher should be interpreted like new bemjson
- * [ ] 100% coverage
+ * [x] 100% coverage
 
 ## API
 
