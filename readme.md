@@ -18,8 +18,8 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
 
 ## TODO:
 
- * [ ] Backwards compatibility testing (92 / 150 tests from BH are green)
- * [ ] Return object from matcher should be interpreted like new bemjson
+ * [x] Backwards compatibility testing
+ * [x] Return object from matcher should be interpreted like new bemjson
  * [ ] 100% coverage
 
 ## API
