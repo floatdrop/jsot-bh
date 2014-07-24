@@ -12,6 +12,7 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
  * `false`, `null` and `undefined` are valid elements and will be stringified.
  * ctx.position() returns positions from 0.
  * ctx.position() for element, that not hosted in array returns -1.
+ * Wrapping requires explicit specifiying block in elements: `[{ block: 'button', elem: 'before' }, ctx.json(), { block: 'button', elem: 'after' }]`
 
 ## TODO:
 

@@ -52,17 +52,17 @@ describe('ctx.applyBase()', function() {
     it('should apply base matcher while wrapping', function() {
         bh.match('button', function(ctx) {
             return [
-                { elem: 'base-before' },
+                { block: 'button', elem: 'base-before' },
                 ctx.json(),
-                { elem: 'base-after' }
+                { block: 'button', elem: 'base-after' }
             ];
         });
         bh.match('button', function(ctx) {
             ctx.applyBase();
             return [
-                { elem: 'before' },
+                { block: 'button', elem: 'before' },
                 ctx.json(),
-                { elem: 'after' }
+                { block: 'button', elem: 'after' }
             ];
         });
         bh.apply({ block: 'button', content: 'Hello' }).should.equal(
