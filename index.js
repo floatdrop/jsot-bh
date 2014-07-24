@@ -4,6 +4,32 @@ var serialize = require('bemjson-to-html');
 var Context = require('snap-context');
 var matcher = require('object-match-statement');
 
+/* Lodash implementation of flatten */
+function flatten(array) {
+    var index = -1,
+        length = array.length,
+        resIndex = 0,
+        result = [];
+
+    while (++index < length) {
+        var value = array[index];
+        if (Array.isArray(value)) {
+            value = flatten(value);
+
+            var valIndex = -1,
+            valLength = value.length;
+
+            result.length += valLength;
+            while (++valIndex < valLength) {
+                result[resIndex++] = value[valIndex];
+            }
+        } else {
+            result[resIndex++] = value;
+        }
+    }
+    return result;
+}
+
 function defineContextMethod(object, method, func) {
     Object.defineProperty(object, method, {
         value: func,
@@ -50,8 +76,12 @@ function JSOTBH() {
     defineContextMethod(this, 'cls', Utils.setPropertyValue.bind(this)('cls'));
     defineContextMethod(this, 'content', Utils.setPropertyValue.bind(this)('content'));
     defineContextMethod(this, 'extend', Utils.extend);
-    defineContextMethod(this, 'js', Utils.setPropertyValue.bind(this)('js'));
-    defineContextMethod(this, 'param', Utils.setPropertyValue.bind(this));
+    defineContextMethod(this, 'js', Utils.setPropertyValue.bind(this).call(this, 'js'));
+    defineContextMethod(this, 'param', function () {
+        var args = Array.prototype.slice.call(arguments);
+        var name = args.shift();
+        return Utils.setPropertyValue.bind(this)(name).apply(this, args);
+    });
     defineContextMethod(this, 'tag', Utils.setPropertyValue.bind(this)('tag'));
     defineContextMethod(this, 'mix', Utils.setPropertyArray.bind(this)('mix'));
     defineContextMethod(this, 'mod', Utils.setPropertyKeyValue.bind(this)('mods'));
@@ -81,7 +111,7 @@ JSOTBH.prototype.process = function process(json) {
         return this.processArray(json);
     }
 
-    if (typeof json === 'object') {
+    if (typeof json === 'object' && json) {
         if (json.block) { this._context.set('block', json.block); } else { json.block = this._context.get('block'); }
         this._context.set('object', json);
         this._context.snapshot();
@@ -89,7 +119,7 @@ JSOTBH.prototype.process = function process(json) {
         this._context.restore();
         return result;
     } else {
-        return json.toString();
+        return '' + json;
     }
 };
 
@@ -125,11 +155,14 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, star
 
 JSOTBH.prototype.processArray = function processArray(array) {
     var result = '';
+    array = flatten(array);
     for (var i = array.length - 1; i >= 0; i--) {
         this._current.length = array.length;
         this._current.position = i;
         result = this.apply(array[i]) + result;
     }
+    this._current.length = -1;
+    this._current.position = 0;
     return result;
 };
 
@@ -176,6 +209,12 @@ JSOTBH.prototype.length = function length() {
 
 JSOTBH.prototype.position = function position() {
     return this._current.position;
+};
+
+JSOTBH.prototype.isSimple = function(obj) {
+    if (!obj || obj === true) { return true; }
+    var t = typeof obj;
+    return t === 'string' || t === 'number';
 };
 
 module.exports = JSOTBH;

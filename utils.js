@@ -13,24 +13,23 @@ Utils.setPropertyKeyValueObject = function (name) {
 
 Utils.setPropertyArray = function setPropertyArray(name) {
     return function scopedSPA(value, force) {
+        var object = this._context.get('object');
         if (force) {
-            this._context.get('object')[name] = value;
+            object[name] = value;
             return this;
         }
 
         if (value !== undefined) {
-            if (this._context.get('object')[name]) {
-                this._context.get('object')[name] = Array.isArray(this._context.get('object')[name]) ?
-                    this._context.get('object')[name].concat(value) :
-                    [this._context.get('object')[name]].concat(value);
+            if (object.hasOwnProperty(name)) {
+                object[name] = Array.isArray(object[name]) ? object[name].concat(value) : [object[name]].concat(value);
             } else {
-                this._context.get('object')[name] = value;
+                object[name] = Array.isArray(value) ? value : [value];
             }
 
             return this;
         }
 
-        return this._context.get('object')[name];
+        return object[name];
     };
 };
 
@@ -53,15 +52,10 @@ Utils.setPropertyKeyValue = function setPropertyKeyValue(name) {
         var object = this._context.get('object');
         var property = (object[name] = object[name] || {});
 
-        if (force) {
-            property[key] = value;
-            return this;
-        }
-
         if (arguments.length > 1) {
             if (value === undefined) {
                 delete property[key];
-            } else if (!property.hasOwnProperty(key)) {
+            } else if (force || !property.hasOwnProperty(key)) {
                 property[key] = value;
             }
             return this;

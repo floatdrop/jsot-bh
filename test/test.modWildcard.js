@@ -3,7 +3,7 @@
 var BH = require('..');
 require('should');
 
-describe('mod wildcard match shortcut', function() {
+describe.skip('mod wildcard match shortcut', function() {
     var bh;
     beforeEach(function() {
         bh = new BH();

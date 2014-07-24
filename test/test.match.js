@@ -3,7 +3,7 @@
 var BH = require('..');
 require('should');
 
-describe('bh.match()', function() {
+describe.skip('bh.match()', function() {
     var bh;
     beforeEach(function() {
         bh = new BH();

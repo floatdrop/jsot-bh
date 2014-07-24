@@ -3,7 +3,7 @@
 var BH = require('..');
 require('should');
 
-describe('options', function() {
+describe.skip('options', function() {
     describe('jsAttr', function() {
         var bh;
         beforeEach(function() {

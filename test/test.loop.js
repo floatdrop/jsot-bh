@@ -3,7 +3,7 @@
 var BH = require('..');
 require('should');
 
-describe('loop', function() {
+describe.skip('loop', function() {
     describe('jsAttr', function() {
         var bh;
         beforeEach(function() {

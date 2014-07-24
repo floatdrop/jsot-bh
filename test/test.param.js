@@ -18,13 +18,13 @@ describe('ctx.param()', function() {
         bh.match('button', function(ctx) {
             ctx.param('type', 'button');
         });
-        bh.processBemJson({ block: 'button' }).type.should.equal('button');
+        bh.process({ block: 'button' }).type.should.equal('button');
     });
     it('should not override user param', function() {
         bh.match('button', function(ctx) {
             ctx.param('type', 'button');
         });
-        bh.processBemJson({ block: 'button', type: 'link' }).type.should.equal('link');
+        bh.process({ block: 'button', type: 'link' }).type.should.equal('link');
     });
     it('should not override later declarations', function() {
         bh.match('button', function(ctx) {
@@ -33,7 +33,7 @@ describe('ctx.param()', function() {
         bh.match('button', function(ctx) {
             ctx.param('type', 'button');
         });
-        bh.processBemJson({ block: 'button' }).type.should.equal('button');
+        bh.process({ block: 'button' }).type.should.equal('button');
     });
     it('should override later declarations with force flag', function() {
         bh.match('button', function(ctx) {
@@ -42,12 +42,12 @@ describe('ctx.param()', function() {
         bh.match('button', function(ctx) {
             ctx.param('type', 'button');
         });
-        bh.processBemJson({ block: 'button' }).type.should.equal('control');
+        bh.process({ block: 'button' }).type.should.equal('control');
     });
     it('should override user declarations with force flag', function() {
         bh.match('button', function(ctx) {
             ctx.param('type', 'button', true);
         });
-        bh.processBemJson({ block: 'button', type: 'link' }).type.should.equal('button');
+        bh.process({ block: 'button', type: 'link' }).type.should.equal('button');
     });
 });

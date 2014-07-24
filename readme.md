@@ -9,6 +9,9 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
  * Calling attr (or call to similar set method) with `undefined` argument as a value will erase this attribute from attributes (but `null` is ok). 
  * bemjson-to-html renders undefined attributes (which are in bemjson, but with value `undefined`)
  * BEM identifier should not contain `\\"` parts, but can contain `"`.
+ * `false`, `null` and `undefined` are valid elements and will be stringified.
+ * ctx.position() returns positions from 0.
+ * ctx.position() for element, that not hosted in array returns -1.
 
 ## TODO:
 
