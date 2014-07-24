@@ -78,6 +78,6 @@ describe('ctx.attr()', function() {
                 type: 'link',
                 disabled: 'disabled'
             }
-        }).should.equal('<div class="button" type="button" disabled="undefined"></div>');
+        }).should.equal('<div class="button" type="button"></div>');
     });
 });

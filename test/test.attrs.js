@@ -84,6 +84,6 @@ describe('ctx.attrs()', function() {
                 disabled: 'disabled',
                 name: 'button'
             }
-        }).should.equal('<div class="button" type="button" disabled="undefined" name="button"></div>');
+        }).should.equal('<div class="button" type="button" name="button"></div>');
     });
 });
