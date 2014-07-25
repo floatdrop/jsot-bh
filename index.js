@@ -1,17 +1,15 @@
-var Utils = require('./utils.js');
-var lastGenId = 0;
 var BEMJSON = require('bemjson-to-html');
 var Context = require('snap-context');
 var matcher = require('object-match-statement');
 var flatten = require('./flatten.js');
+var extend = require('./extend.js');
+var Method = require('bh-property-helpers');
+var method = new Method();
 
-function defineContextMethod(object, method, func) {
-    Object.defineProperty(object, method, {
-        value: func,
-        configurable : false,
-        enumerable : false,
-        writable : false
-    });
+var lastGenId = 0;
+
+function pickModsProperty() {
+    return this._context.get('object').elem ? '_object.elemMods' : '_object.mods';
 }
 
 function JSOTBH() {
@@ -51,40 +49,27 @@ function JSOTBH() {
         this._stopFlag = true;
     };
 
-    defineContextMethod(this, 'attr', Utils.setPropertyKeyValue.bind(this)('attrs'));
-    defineContextMethod(this, 'attrs', Utils.setPropertyKeyValueObject.bind(this)('attrs'));
-    defineContextMethod(this, 'bem', Utils.setPropertyValue.bind(this)('bem'));
-    defineContextMethod(this, 'cls', Utils.setPropertyValue.bind(this)('cls'));
-    defineContextMethod(this, 'content', Utils.setPropertyValue.bind(this)('content'));
-    defineContextMethod(this, 'extend', Utils.extend);
-    defineContextMethod(this, 'js', Utils.setPropertyValue.bind(this).call(this, 'js'));
-    defineContextMethod(this, 'param', function () {
-        var args = Array.prototype.slice.call(arguments);
-        var name = args.shift();
-        return Utils.setPropertyValue.bind(this)(name).apply(this, args);
-    });
-    defineContextMethod(this, 'tag', Utils.setPropertyValue.bind(this)('tag'));
-    defineContextMethod(this, 'mix', Utils.setPropertyArray.bind(this)('mix'));
-    defineContextMethod(this, 'mod', function () {
-        if (this._context.get('object').elem) {
-            return Utils.setPropertyKeyValue.bind(this)('elemMods').apply(this, arguments);
-        } else {
-            return Utils.setPropertyKeyValue.bind(this)('mods').apply(this, arguments);
-        }
-    });
-    defineContextMethod(this, 'mods', function () {
-        if (this._context.get('object').elem) {
-            return Utils.setPropertyKeyValueObject.bind(this)('elemMods').apply(this, arguments);
-        } else {
-            return Utils.setPropertyKeyValueObject.bind(this)('mods').apply(this, arguments);
-        }
-    });
+    method(this)
+        .before(function () {
+            this._object = this._context.get('object');
+        })
+        .named('attr').changes('_object.attrs').property()
+        .named('attrs').changes('_object.attrs').property()
+        .named('bem').changes('_object.bem').value()
+        .named('cls').changes('_object.cls').value()
+        .named('content').changes('_object.content').value()
+        .named('js').changes('_object.js').value()
+        .named('param').changes('_object').property()
+        .named('tag').changes('_object.tag').value()
+        .named('mix').changes('_object.mix').array()
+        .named('mod').changes(pickModsProperty).property()
+        .named('mods').changes(pickModsProperty).object();
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
     if (typeof pattern !== 'string') { throw new Error('Pattern should be a string, not a ' + pattern); }
 
-    var parsedPattern = Utils.parseBhIdentifier(pattern);
+    var parsedPattern = this.parseBhIdentifier(pattern);
 
     this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || [];
     this._matchers[parsedPattern.block].push(callback.bind(this, this));
@@ -214,12 +199,39 @@ JSOTBH.prototype.isSimple = function isSimple(obj) {
 };
 
 JSOTBH.prototype.setOptions = function setOptions(_options) {
-    this._options = Utils.extend(this._options, _options);
+    this._options = extend(this._options, _options);
     this.bemjson = new BEMJSON(this._options);
 };
 
 JSOTBH.prototype.getOptions = function getOptions() {
     return this._options;
 };
+
+JSOTBH.prototype.extend = extend;
+
+JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
+    var result = {};
+
+    var blockElement = pattern.split('__');
+
+    var blockArray = blockElement[0].split('_');
+    result.block = blockArray[0];
+    if (blockArray.length > 1) {
+        result.mods = {};
+        result.mods[blockArray[1]] = blockArray[2] || true;
+    }
+
+    if (blockElement.length > 1) {
+        var elementArray = blockElement[1].split('_');
+        result.elem = elementArray[0];
+        if (elementArray.length > 1) {
+            result.elemMods = {};
+            result.elemMods[elementArray[1]] = elementArray[2] || true;
+        }
+    }
+
+    return result;
+};
+
 
 module.exports = JSOTBH;
