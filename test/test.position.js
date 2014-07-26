@@ -45,7 +45,7 @@ describe('ctx.position()', function() {
         });
         bh.apply({ block: 'button', content: { elem: 'inner' } }).should.equal(
             '<div class="button">' +
-            '<div class="button__inner button__inner_pos_0"></div>' +
+            '<div class="button__inner button__inner_pos_1"></div>' +
             '</div>'
         );
     });

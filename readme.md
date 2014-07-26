@@ -7,10 +7,7 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
 This library is still not compatible with BH, here list of the known differences:
 
  * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
- * Last defined matcher is applyed first (this should be fixed in #4)
  * BEM identifier should not contain `\\"` parts, but can contain `"`.
- * ctx.position() for element, that not hosted in array returns -1.
- * Wrapping requires explicit specifiying block in elements: `[{ block: 'button', elem: 'before' }, ctx.json(), { block: 'button', elem: 'after' }]`
  * JSOTBH.match does not accept objects as "multiple" matchers definition, use chaining instead. 
  * Loop detection deprecated.
 

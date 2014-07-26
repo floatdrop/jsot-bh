@@ -72,8 +72,12 @@ JSOTBH.prototype.process = function process(json) {
     }
 
     if (typeof json === 'object' && json) {
+        if (json.__processed) {
+            return this.bemjson.toHtml(json);
+        }
         if (json.block) { this._context.set('block', json.block); }
         if (json.mods) { this._context.set('blockMods', json.mods); }
+
         this._context.set('object', json);
         this._context.snapshot();
         var result = this.processObject(json);
@@ -86,15 +90,20 @@ JSOTBH.prototype.process = function process(json) {
 
 JSOTBH.prototype.processObject = function processObject() {
     var block = this._context.get('block');
+    var _object = this._context.get('object');
     var matchersForBlock = this._matchers[block];
     if (matchersForBlock) {
         this.applyMatchers(matchersForBlock, this._patterns[block]);
     }
 
     var object = this._context.get('object');
-
-    if (object.content !== undefined) {
-        object.content = this.apply(object.content);
+    if (_object !== object) {
+        _object.__processed = true;
+        object = this.apply(object);
+    } else {
+        if (object.content !== undefined) {
+            object.content = this.apply(object.content);
+        }
     }
 
     return object;
@@ -167,7 +176,7 @@ JSOTBH.prototype.length = function length() {
 };
 
 JSOTBH.prototype.position = function position() {
-    return this._current.position + 1;
+    return this._current.position === -1 ? 1 : this._current.position + 1;
 };
 
 JSOTBH.prototype.isSimple = function isSimple(obj) {
