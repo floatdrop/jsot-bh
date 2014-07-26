@@ -8,7 +8,6 @@ This library is still not compatible with BH, here list of the known differences
 
  * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
  * BEM identifier should not contain `\\"` parts, but can contain `"`.
- * JSOTBH.match does not accept objects as "multiple" matchers definition, use chaining instead. 
  * Loop detection deprecated.
 
 ## API

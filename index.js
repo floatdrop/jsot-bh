@@ -23,6 +23,12 @@ function JSOTBH() {
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
+    if (typeof pattern === 'object') {
+        for (var p in pattern) {
+            this.match(p, pattern[p]);
+        }
+    }
+
     if (typeof pattern !== 'string') { throw new Error('Pattern should be a string, not a ' + pattern); }
 
     var parsedPattern = this.parseBhIdentifier(pattern);
