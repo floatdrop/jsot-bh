@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "bemjson-to-html": "^0.2.0",
-    "bh-property-helpers": "0.0.2",
+    "bh-property-helpers": "0.0.4",
     "object-match-statement": "^1.0.2",
     "snap-context": "~1.0.0"
   }

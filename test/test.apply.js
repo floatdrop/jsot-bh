@@ -8,7 +8,7 @@ describe('ctx.apply()', function() {
     beforeEach(function() {
         bh = new BH();
     });
-    it.only('should return valid processed element', function() {
+    it('should return valid processed element', function() {
         bh.match('button', function(ctx) {
             var inner = ctx.process({ block: 'button', elem: 'inner' });
             inner.tag.should.equal('span');
