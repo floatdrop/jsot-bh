@@ -42,6 +42,11 @@ JSOTBH.prototype.match = function match(pattern, callback) {
     return this;
 };
 
+JSOTBH.prototype.toHtml = function toHtml(json) {
+    if (typeof json === 'string') { return json; }
+    return this.apply(json);
+};
+
 JSOTBH.prototype.apply = function apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
 };
