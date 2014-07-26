@@ -3,14 +3,8 @@ var Context = require('snap-context');
 var matcher = require('object-match-statement');
 var flatten = require('./flatten.js');
 var extend = require('./extend.js');
-var Method = require('bh-property-helpers');
-var method = new Method();
 
 var lastGenId = 0;
-
-function pickModsProperty() {
-    return this._context.get('object').elem ? '_object.elemMods' : '_object.mods';
-}
 
 function JSOTBH() {
     this._options = {
@@ -26,44 +20,6 @@ function JSOTBH() {
     this._context = new Context();
 
     this._milliseconds = new Date().getTime().toString();
-
-    this.applyBase = function () {
-        var block = this._context.get('block');
-        this.applyMatchers(
-            this._matchers[block],
-            this._patterns[block],
-            this._current.matcherIdx - 1
-        );
-        this.stop();
-    };
-
-    this.tParam = function (key, value) {
-        if (value) {
-            this._context.set(key, value);
-            return value;
-        }
-        return this._context.get(key);
-    };
-
-    this.stop = function () {
-        this._stopFlag = true;
-    };
-
-    method(this)
-        .before(function () {
-            this._object = this._context.get('object');
-        })
-        .named('attr').changes('_object.attrs').property()
-        .named('attrs').changes('_object.attrs').property()
-        .named('bem').changes('_object.bem').value()
-        .named('cls').changes('_object.cls').value()
-        .named('content').changes('_object.content').value()
-        .named('js').changes('_object.js').value()
-        .named('param').changes('_object').property()
-        .named('tag').changes('_object.tag').value()
-        .named('mix').changes('_object.mix').array()
-        .named('mod').changes(pickModsProperty).property()
-        .named('mods').changes(pickModsProperty).object();
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
@@ -82,6 +38,28 @@ JSOTBH.prototype.match = function match(pattern, callback) {
 
 JSOTBH.prototype.apply = function apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
+};
+
+JSOTBH.prototype.applyBase = function applyBase() {
+    var block = this._context.get('block');
+    this.applyMatchers(
+        this._matchers[block],
+        this._patterns[block],
+        this._current.matcherIdx - 1
+    );
+    this.stop();
+};
+
+JSOTBH.prototype.tParam = function tParam(key, value) {
+    if (value) {
+        this._context.set(key, value);
+        return value;
+    }
+    return this._context.get(key);
+};
+
+JSOTBH.prototype.stop = function stop() {
+    this._stopFlag = true;
 };
 
 JSOTBH.prototype.process = function process(json) {
@@ -233,5 +211,147 @@ JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
     return result;
 };
 
+/*
+ *
+ *  Boilerplate methods (attr attrs bem cls content js param tag mix mod mods)
+ *
+ */
+
+JSOTBH.prototype.attr = function (key, value, force) {
+    var object = this._context.get('object');
+    object.attrs = object.attrs || {};
+    var prop = object.attrs;
+    if (arguments.length > 1) {
+        prop[key] = !prop.hasOwnProperty(key) || force ? value : prop[key];
+        return this;
+    } else {
+        return prop ? prop[key] : undefined;
+    }
+};
+
+JSOTBH.prototype.attrs = function (values, force) {
+    var object = this._context.get('object');
+    object.attrs = object.attrs || {};
+    if (values !== undefined) {
+        object.attrs = force ? extend(object.attrs, values) : extend(values, object.attrs);
+        return this;
+    }
+
+    return object.attrs;
+};
+
+JSOTBH.prototype.bem = function (value, force) {
+    var object = this._context.get('object');
+    if (arguments.length > 0) {
+        if (force || !object.hasOwnProperty('bem')) {
+            object.bem = value;
+        }
+        return this;
+    }
+
+    return object.bem;
+};
+
+JSOTBH.prototype.cls = function (value, force) {
+    var object = this._context.get('object');
+    if (arguments.length > 0) {
+        if (force || !object.hasOwnProperty('cls')) {
+            object.cls = value;
+        }
+        return this;
+    }
+
+    return object.cls;
+};
+
+JSOTBH.prototype.content = function (value, force) {
+    var object = this._context.get('object');
+    if (arguments.length > 0) {
+        if (force || !object.hasOwnProperty('content')) {
+            object.content = value;
+        }
+        return this;
+    }
+
+    return object.content;
+};
+
+JSOTBH.prototype.js = function (value, force) {
+    var object = this._context.get('object');
+    if (arguments.length > 0) {
+        if (force || !object.hasOwnProperty('js')) {
+            object.js = value;
+        }
+        return this;
+    }
+
+    return object.js;
+};
+
+JSOTBH.prototype.param = function (key, value, force) {
+    var object = this._context.get('object');
+    if (arguments.length > 1) {
+        object[key] = !object.hasOwnProperty(key) || force ? value : object[key];
+        return this;
+    } else {
+        return object ? object[key] : undefined;
+    }
+};
+
+JSOTBH.prototype.tag = function (value, force) {
+    var object = this._context.get('object');
+    if (arguments.length > 0) {
+        if (force || !object.hasOwnProperty('tag')) {
+            object.tag = value;
+        }
+        return this;
+    }
+
+    return object.tag;
+};
+
+JSOTBH.prototype.mix = function (array, force) {
+    var object = this._context.get('object');
+    var prop = object.mix;
+    if (array !== undefined) {
+        if (force) {
+            object.mix = array;
+        } else {
+            if (prop) {
+                object.mix = Array.isArray(prop) ?
+                    prop.concat(array) :
+                    [prop].concat(array);
+            } else {
+                object.mix = array;
+            }
+        }
+        return this;
+    }
+
+    return prop;
+};
+
+JSOTBH.prototype.mod = function (key, value, force) {
+    var object = this._context.get('object');
+    object.mods = object.mods || {};
+    var prop = object.mods;
+    if (arguments.length > 1) {
+        prop[key] = !prop.hasOwnProperty(key) || force ? value : prop[key];
+        return this;
+    } else {
+        return prop ? prop[key] : undefined;
+    }
+};
+
+JSOTBH.prototype.mods = function (values, force) {
+    var object = this._context.get('object');
+    object.mods = object.mods || {};
+    if (values !== undefined) {
+        object.mods = force ? extend(object.mods, values) : extend(values, object.mods);
+        return this;
+    }
+
+    return object.mods;
+};
 
 module.exports = JSOTBH;
