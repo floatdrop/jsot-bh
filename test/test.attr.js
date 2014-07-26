@@ -30,7 +30,7 @@ describe('ctx.attr()', function() {
             ctx.attr('disabled', false);
             ctx.attr('value', null);
         });
-        bh.apply({ block: 'checkbox' }).should.equal('<div class="checkbox" type="button" disabled="false" value="null"></div>');
+        bh.apply({ block: 'checkbox' }).should.equal('<div class="checkbox" type="button" disabled="false"></div>');
     });
 
     it('should not override user attr', function() {
@@ -44,7 +44,7 @@ describe('ctx.attr()', function() {
                 type: 'link',
                 disabled: undefined
             }
-        }).should.equal('<div class="button" type="link" disabled="undefined"></div>');
+        }).should.equal('<div class="button" type="link"></div>');
     });
 
     it('should not override later declarations', function() {

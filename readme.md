@@ -8,11 +8,11 @@ This library is still not compatible with BH, here list of the known differences
 
  * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
  * Last defined matcher is applyed first (this should be fixed in #4)
- * Calling attr (or call to similar set method) with `undefined` argument as a value will erase this attribute from attributes (but `null` is ok). 
- * bemjson-to-html renders undefined attributes (which are in bemjson, but with value `undefined`)
+ * [x] Calling attr (or call to similar set method) with `undefined` argument as a value will erase this attribute from attributes (but `null` is ok). 
+ * [x] bemjson-to-html renders undefined attributes (which are in bemjson, but with value `undefined`)
  * BEM identifier should not contain `\\"` parts, but can contain `"`.
- * `false`, `null` and `undefined` are valid elements and will be stringified.
- * ctx.position() returns positions from 0.
+ * [x] `false`, `null` and `undefined` are valid elements and will be stringified.
+ * [x] ctx.position() returns positions from 0.
  * ctx.position() for element, that not hosted in array returns -1.
  * Wrapping requires explicit specifiying block in elements: `[{ block: 'button', elem: 'before' }, ctx.json(), { block: 'button', elem: 'after' }]`
  * JSOTBH.match does not accept objects as "multiple" matchers definition, use chaining instead. 

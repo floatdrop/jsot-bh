@@ -167,7 +167,7 @@ JSOTBH.prototype.length = function length() {
 };
 
 JSOTBH.prototype.position = function position() {
-    return this._current.position;
+    return this._current.position + 1;
 };
 
 JSOTBH.prototype.isSimple = function isSimple(obj) {
@@ -310,31 +310,31 @@ JSOTBH.prototype.tag = function (value, force) {
     return object.tag;
 };
 
-JSOTBH.prototype.mix = function (array, force) {
+JSOTBH.prototype.mix = function (mix, force) {
     var object = this._context.get('object');
-    var prop = object.mix;
-    if (array !== undefined) {
+    if (mix !== undefined) {
         if (force) {
-            object.mix = array;
+            object.mix = mix;
         } else {
-            if (prop) {
-                object.mix = Array.isArray(prop) ?
-                    prop.concat(array) :
-                    [prop].concat(array);
+            if (object.mix) {
+                object.mix = Array.isArray(object.mix) ?
+                    object.mix.concat(mix) :
+                    [object.mix].concat(mix);
             } else {
-                object.mix = array;
+                object.mix = Array.isArray(mix) ? mix : [mix];
             }
         }
         return this;
+    } else {
+        return object.mix;
     }
-
-    return prop;
 };
 
 JSOTBH.prototype.mod = function (key, value, force) {
     var object = this._context.get('object');
-    object.mods = object.mods || {};
-    var prop = object.mods;
+    var property = object.elem ? 'elemMods' : 'mods';
+    object[property] = object[property] || {};
+    var prop = object[property];
     if (arguments.length > 1) {
         prop[key] = !prop.hasOwnProperty(key) || force ? value : prop[key];
         return this;
@@ -345,9 +345,10 @@ JSOTBH.prototype.mod = function (key, value, force) {
 
 JSOTBH.prototype.mods = function (values, force) {
     var object = this._context.get('object');
-    object.mods = object.mods || {};
+    var property = object.elem ? 'elemMods' : 'mods';
+    object[property] = object[property] || {};
     if (values !== undefined) {
-        object.mods = force ? extend(object.mods, values) : extend(values, object.mods);
+        object[property] = force ? extend(object[property], values) : extend(values, object.mods);
         return this;
     }
 

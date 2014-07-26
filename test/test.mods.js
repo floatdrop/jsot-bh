@@ -50,7 +50,7 @@ describe('ctx.mods()', function() {
                 type: 'link',
                 disabled: undefined
             }
-        }).should.equal('<div class="button button_type_link button_disabled_undefined"></div>');
+        }).should.equal('<div class="button button_type_link"></div>');
     });
 
     it('should not override later declarations', function() {
