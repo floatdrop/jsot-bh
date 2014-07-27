@@ -1,6 +1,6 @@
 {
   "name": "jsot-bh",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "BH wrapper for JSOT template engine",
   "main": "index.js",
   "scripts": {
