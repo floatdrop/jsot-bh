@@ -20,6 +20,16 @@ function JSOTBH() {
     this._context = new Context();
 
     this._milliseconds = new Date().getTime().toString();
+
+    /**
+     * Special field for storing shit. Like global. For fuck sake.
+     * ```javascript
+     * bh.lib.objects = bh.lib.objects || {};
+     * bh.lib.objects.inverse = bh.lib.objects.inverse || function(obj) { ... };
+     * ```
+     * @type {Object}
+     */
+    this.lib = {};
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
