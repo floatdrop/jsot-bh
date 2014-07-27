@@ -140,6 +140,11 @@ JSOTBH.prototype.process = function process(json) {
 JSOTBH.prototype.processObject = function processObject() {
     var block = this._context.get('block');
     var _object = this._context.get('object');
+    if (!_object.block) {
+        _object.block = this._context.get('block');
+        _object.mods = this._context.get('blockMods');
+    }
+
     var matchersForBlock = this._matchers[block];
     if (matchersForBlock) {
         this.applyMatchers(matchersForBlock, this._patterns[block]);
@@ -160,10 +165,6 @@ JSOTBH.prototype.processObject = function processObject() {
 
 JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, startFrom) {
     var object = this._context.get('object');
-    if (!object.block) {
-        object.block = this._context.get('block');
-        object.mods = this._context.get('blockMods');
-    }
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
     for (var m = startFrom; m >= 0 ; m--) {
         if (patterns[m](object)) {

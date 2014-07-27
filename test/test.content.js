@@ -1,3 +1,5 @@
+/* global describe, it, beforeEach */
+
 var BH = require('..');
 require('should');
 
@@ -5,6 +7,11 @@ describe('ctx.content()', function() {
     var bh;
     beforeEach(function() {
         bh = new BH();
+    });
+    it('should set right classes in content element', function() {
+        bh.apply({ block: 'button', content: { elem: 'text'} }).should.equal(
+            '<div class="button"><div class="button__text"></div></div>'
+        );
     });
     it('should return bemjson content', function() {
         bh.match('button', function(ctx) {
