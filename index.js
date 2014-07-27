@@ -140,11 +140,13 @@ JSOTBH.prototype.process = function process(json) {
 JSOTBH.prototype.processObject = function processObject() {
     var block = this._context.get('block');
     var _object = this._context.get('object');
-    if (!_object.block) {
+
+    if (_object.elem && _object.mods) {
+        _object.elemMods = _object.mods;
+    }
+
+    if (!_object.block && _object.elem) {
         _object.block = this._context.get('block');
-        if (_object.mods) {
-            _object.elemMods = _object.mods;
-        }
         _object.mods = this._context.get('blockMods');
     }
 
