@@ -142,6 +142,9 @@ JSOTBH.prototype.processObject = function processObject() {
     var _object = this._context.get('object');
     if (!_object.block) {
         _object.block = this._context.get('block');
+        if (_object.mods) {
+            _object.elemMods = _object.mods;
+        }
         _object.mods = this._context.get('blockMods');
     }
 

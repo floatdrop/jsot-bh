@@ -1,0 +1,64 @@
+{
+  "block": "popup",
+  "mods": {
+    "type": "modal",
+    "position": "fixed",
+    "has-close": "yes",
+    "name": "timer-dialog"
+  },
+  "underMods": {
+    "type": "paranja"
+  },
+  "content": [
+    {
+      "elem": "content",
+      "content": {
+        "block": "timer-dialog",
+        "content": [
+          {
+            "block": "title",
+            "mods": {
+              "size": "smaller"
+            },
+            "content": "tanker-stub"
+          },
+          {
+            "block": "static-text",
+            "mods": {
+              "size": "small"
+            },
+            "content": "tanker-stub"
+          },
+          {
+            "block": "button",
+            "mix": [
+              {
+                "block": "timer-dialog",
+                "elem": "yes-btn"
+              }
+            ],
+            "mods": {
+              "size": "m"
+            },
+            "url": "#",
+            "content": "tanker-stub"
+          },
+          {
+            "block": "button",
+            "mix": [
+              {
+                "block": "timer-dialog",
+                "elem": "no-btn"
+              }
+            ],
+            "mods": {
+              "size": "m"
+            },
+            "url": "#",
+            "content": "tanker-stub"
+          }
+        ]
+      }
+    }
+  ]
+}

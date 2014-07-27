@@ -1,0 +1,321 @@
+{
+  "block": "promo-page",
+  "content": [
+    {
+      "block": "head",
+      "content": {
+        "block": "promo-page",
+        "elem": "section",
+        "mix": {
+          "block": "promo-page",
+          "elem": "scroll-compensator"
+        },
+        "content": [
+          {
+            "block": "logo",
+            "mix": {
+              "block": "head",
+              "elem": "logo"
+            }
+          },
+          {
+            "block": "head",
+            "elem": "user",
+            "content": {
+              "block": "user",
+              "mods": {
+                "menu": "yes"
+              },
+              "content": [
+                {
+                  "elem": "icon"
+                },
+                {
+                  "elem": "name"
+                }
+              ]
+            }
+          },
+          {
+            "block": "head",
+            "elem": "share",
+            "content": [
+              {
+                "block": "share",
+                "attrs": {
+                  "id": "yashare_main"
+                }
+              },
+              {
+                "tag": "script",
+                "content": "new Ya.share({\"element\":\"yashare_main\",\"l10n\":\"ru\",\"link\":\"http://gorod.yandex.undefined/business/\",\"title\":\"test\",\"image\":\"test\",\"description\":\"test\",\"elementStyle\":{\"type\":\"small\"},\"theme\":\"counter\",\"serviceSpecific\":{\"twitter\":{\"title\":\"test\"}}});"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "block": "start",
+      "content": [
+        [
+          {
+            "block": "intro-layout",
+            "js": true,
+            "content": {
+              "block": "promo-page",
+              "elem": "section",
+              "mix": {
+                "block": "promo-page",
+                "elem": "scroll-compensator"
+              },
+              "content": [
+                null,
+                {
+                  "block": "grid",
+                  "content": {
+                    "elem": "row",
+                    "content": [
+                      {
+                        "elem": "cell",
+                        "mods": {
+                          "pos": 8,
+                          "size": 5
+                        },
+                        "content": {
+                          "block": "balance",
+                          "content": [
+                            {
+                              "elem": "item",
+                              "mods": {
+                                "pos": "first"
+                              },
+                              "content": [
+                                {
+                                  "elem": "name",
+                                  "mix": {
+                                    "block": "i-font",
+                                    "mods": {
+                                      "face": "textbook"
+                                    }
+                                  },
+                                  "content": "tanker-stub"
+                                },
+                                {
+                                  "elem": "count",
+                                  "mix": {
+                                    "block": "i-font",
+                                    "mods": {
+                                      "face": "textbook"
+                                    }
+                                  },
+                                  "content": "tanker-stub"
+                                }
+                              ]
+                            },
+                            {
+                              "elem": "item",
+                              "mods": {
+                                "pos": "second"
+                              },
+                              "content": [
+                                {
+                                  "elem": "name",
+                                  "mix": {
+                                    "block": "i-font",
+                                    "mods": {
+                                      "face": "textbook"
+                                    }
+                                  },
+                                  "content": "tanker-stub"
+                                },
+                                {
+                                  "elem": "count",
+                                  "mix": {
+                                    "block": "i-font",
+                                    "mods": {
+                                      "face": "textbook"
+                                    }
+                                  },
+                                  "content": "tanker-stub"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "elem": "cell",
+                        "mods": {
+                          "pos": 1,
+                          "size": 8
+                        },
+                        "content": [
+                          {
+                            "block": "title",
+                            "mix": {
+                              "block": "intro-layout",
+                              "elem": "title"
+                            },
+                            "mods": {
+                              "size": "big"
+                            },
+                            "content": "tanker-stub"
+                          },
+                          {
+                            "block": "intro-layout",
+                            "elem": "sub-title",
+                            "content": "tanker-stub"
+                          },
+                          {
+                            "block": "static-text",
+                            "content": "tanker-stub"
+                          },
+                          {
+                            "block": "intro-controls",
+                            "mix": {
+                              "block": "i-form-detect",
+                              "js": true
+                            },
+                            "content": [
+                              {
+                                "block": "grid",
+                                "content": [
+                                  {
+                                    "elem": "row",
+                                    "content": [
+                                      {
+                                        "elem": "cell",
+                                        "mods": {
+                                          "pos": 1,
+                                          "size": 4
+                                        },
+                                        "content": [
+                                          {
+                                            "block": "intro-controls",
+                                            "elem": "label",
+                                            "content": "tanker-stub"
+                                          },
+                                          {
+                                            "block": "select",
+                                            "name": "mail",
+                                            "mods": {
+                                              "size": "m",
+                                              "theme": "normal"
+                                            },
+                                            "content": [
+                                              {
+                                                "block": "select",
+                                                "elem": "button"
+                                              },
+                                              {
+                                                "elem": "control",
+                                                "content": [
+                                                  {
+                                                    "elem": "option",
+                                                    "attrs": {},
+                                                    "content": "region"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {},
+                                  {
+                                    "elem": "row",
+                                    "content": [
+                                      {
+                                        "elem": "cell",
+                                        "mods": {
+                                          "pos": 1,
+                                          "size": 4
+                                        },
+                                        "content": {
+                                          "block": "promo-button",
+                                          "attrs": {},
+                                          "mix": [
+                                            {
+                                              "block": "intro-controls",
+                                              "elem": "play-btn"
+                                            },
+                                            {
+                                              "block": "improve-link",
+                                              "js": {}
+                                            }
+                                          ],
+                                          "mods": {
+                                            "size": "m"
+                                          },
+                                          "content": "tanker-stub"
+                                        }
+                                      },
+                                      {}
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "block": "intro-layout",
+            "elem": "stat",
+            "mix": {
+              "block": "stat-wrap",
+              "js": true
+            }
+          }
+        ]
+      ]
+    },
+    [
+      {
+        "block": "foot",
+        "elem": "padder",
+        "mods": {
+          "pos": "top"
+        }
+      },
+      {
+        "block": "foot",
+        "content": {
+          "block": "promo-page",
+          "elem": "section",
+          "mix": {
+            "block": "promo-page",
+            "elem": "scroll-compensator"
+          },
+          "content": [
+            {
+              "block": "copyright",
+              "start": 2014
+            },
+            {
+              "block": "foot",
+              "elem": "legend",
+              "content": "tanker-stub"
+            }
+          ]
+        }
+      },
+      {
+        "block": "foot",
+        "elem": "padder",
+        "mods": {
+          "pos": "bottom"
+        }
+      }
+    ]
+  ]
+}

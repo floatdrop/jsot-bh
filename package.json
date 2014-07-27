@@ -36,7 +36,7 @@
     "should": "^4.0.4"
   },
   "dependencies": {
-    "bemjson-to-html": "^0.2.6",
+    "bemjson-to-html": "^0.2.7",
     "object-match-statement": "^1.0.4",
     "require-all": "0.0.8",
     "snap-context": "~1.0.0"
