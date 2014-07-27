@@ -1,4 +1,5 @@
 var BEMJSON = require('bemjson-to-html');
+var escape = require('bemjson-to-html/escape.js');
 var Context = require('snap-context');
 var matcher = require('object-match-statement');
 var flatten = require('./flatten.js');
@@ -33,13 +34,23 @@ function JSOTBH() {
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
+    if (Array.isArray(pattern)) {
+        for (var i = 0; i < pattern.length; i++) {
+            this.match(pattern[i], callback);
+        }
+        return;
+    }
+
     if (typeof pattern === 'object') {
         for (var p in pattern) {
             this.match(p, pattern[p]);
         }
+        return;
     }
 
-    if (typeof pattern !== 'string') { throw new Error('Pattern should be a string, not a ' + pattern); }
+    if (typeof pattern !== 'string') {
+        return console.error('Pattern should be a string, not a ' + pattern +'. Skipping.');
+    }
 
     var parsedPattern = this.parseBhIdentifier(pattern);
 
@@ -54,19 +65,36 @@ JSOTBH.prototype.match = function match(pattern, callback) {
 
 JSOTBH.prototype.toHtml = function toHtml(json) {
     if (typeof json === 'string') { return json; }
-    return this.apply(json);
+    return this._apply(json);
 };
 
 JSOTBH.prototype.apply = function apply(json) {
+    var result = '';
+    if (this.rendering) {
+        result = this.process(json);
+    } else {
+        this.rendering = true;
+        result = this.bemjson.toHtml(this.process(json), this._options);
+        this.rendering = false;
+    }
+    return result;
+};
+
+JSOTBH.prototype._apply = function _apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
 };
 
+function remove(array, idx) {
+    return array.slice(0, idx).concat(array.slice(idx + 1, array.length));
+}
+
 JSOTBH.prototype.applyBase = function applyBase() {
     var block = this._context.get('block');
+    var matchers = remove(this._matchers[block], this._current.matcherIdx);
+    var patterns = remove(this._patterns[block], this._current.matcherIdx);
     this.applyMatchers(
-        this._matchers[block],
-        this._patterns[block],
-        this._current.matcherIdx - 1
+        matchers,
+        patterns
     );
     this.stop();
 };
@@ -106,7 +134,7 @@ JSOTBH.prototype.process = function process(json) {
         return result;
     }
 
-    return '';
+    return json;
 };
 
 JSOTBH.prototype.processObject = function processObject() {
@@ -120,10 +148,10 @@ JSOTBH.prototype.processObject = function processObject() {
     var object = this._context.get('object');
     if (_object !== object) {
         _object.__processed = true;
-        object = this.apply(object);
+        object = this._apply(object);
     } else {
         if (object.content !== undefined) {
-            object.content = this.apply(object.content);
+            object.content = this._apply(object.content);
         }
     }
 
@@ -136,7 +164,6 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, star
         object.block = this._context.get('block');
         object.mods = this._context.get('blockMods');
     }
-
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
     for (var m = startFrom; m >= 0 ; m--) {
         if (patterns[m](object)) {
@@ -151,11 +178,11 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, star
 
 JSOTBH.prototype.processArray = function processArray(array) {
     var result = '';
-    array = flatten(array);
+    array = flatten(array).filter(Boolean);
     for (var i = array.length - 1; i >= 0; i--) {
         this._current.length = array.length;
         this._current.position = i;
-        result = this.apply(array[i]) + result;
+        result = this._apply(array[i]) + result;
     }
     this._current.length = -1;
     this._current.position = 0;
@@ -164,13 +191,11 @@ JSOTBH.prototype.processArray = function processArray(array) {
 
 JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     var statement = matcher.build('object', pattern);
-
     if (pattern.elem === undefined) {
         statement = 'object.elem === undefined && ' + statement;
     }
 
     var composedFunction = 'return ' + statement + ';';
-
     /*jshint -W054*/ /* Yes, this is eval */
     return new Function('object', composedFunction);
 };
@@ -181,11 +206,11 @@ JSOTBH.prototype.generateId = function generateId() {
 };
 
 JSOTBH.prototype.isFirst = function isFirts() {
-    return this._current.position === 0;
+    return this._current.position === 0 || this._current.position === -1;
 };
 
 JSOTBH.prototype.isLast = function isLast() {
-    return this._current.position === this._current.length - 1;
+    return this._current.position === this._current.length - 1 || this._current.position === -1;
 };
 
 JSOTBH.prototype.json = function json() {
@@ -204,6 +229,10 @@ JSOTBH.prototype.isSimple = function isSimple(obj) {
     if (!obj || obj === true) { return true; }
     var t = typeof obj;
     return t === 'string' || t === 'number';
+};
+
+JSOTBH.prototype.utils = {
+    isSimple: JSOTBH.prototype.isSimple
 };
 
 JSOTBH.prototype.setOptions = function setOptions(_options) {
@@ -240,6 +269,9 @@ JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
 
     return result;
 };
+
+JSOTBH.prototype.xmlEscape = escape;
+JSOTBH.prototype.attrEscape = escape;
 
 /*
  *
@@ -320,13 +352,15 @@ JSOTBH.prototype.js = function (value, force) {
 
 JSOTBH.prototype.param = function (key, value, force) {
     var object = this._context.get('object');
-    if (arguments.length > 1) {
-        object[key] = !object.hasOwnProperty(key) || force ? value : object[key];
+    if (value !== undefined) {
+        object[key] = object[key] === undefined || force ? value : object[key];
         return this;
     } else {
-        return object ? object[key] : undefined;
+        return object[key];
     }
 };
+
+JSOTBH.prototype.processBemJson = JSOTBH.prototype.process;
 
 JSOTBH.prototype.tag = function (value, force) {
     var object = this._context.get('object');
@@ -340,9 +374,24 @@ JSOTBH.prototype.tag = function (value, force) {
     return object.tag;
 };
 
+function patchMix(mix) {
+    if (Array.isArray(mix)) {
+        for (var i = 0; i < mix.length; i++) {
+            mix[i] = patchMix(mix[i]);
+        }
+        return mix;
+    }
+    if (typeof mix === 'object' && mix.elem && mix.mods) {
+        if (!mix.elemMods) { mix.elemMods = {}; }
+        extend(mix.elemMods, mix.mods);
+    }
+    return mix;
+}
+
 JSOTBH.prototype.mix = function (mix, force) {
     var object = this._context.get('object');
     if (mix !== undefined) {
+        mix = patchMix(mix);
         if (force) {
             object.mix = mix;
         } else {

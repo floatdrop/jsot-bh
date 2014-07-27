@@ -1,5 +1,3 @@
-/* global describe, it, beforeEach */
-
 var BH = require('..');
 require('should');
 
@@ -10,7 +8,7 @@ describe('ctx.apply()', function() {
     });
     it('should return valid processed element', function() {
         bh.match('button', function(ctx) {
-            var inner = ctx.process({ block: 'button', elem: 'inner' });
+            var inner = ctx.apply({ block: 'button', elem: 'inner' });
             inner.tag.should.equal('span');
             ctx.content(inner);
         });
@@ -25,7 +23,7 @@ describe('ctx.apply()', function() {
     });
     it('should return valid processed element with no block name', function() {
         bh.match('button', function(ctx) {
-            var inner = ctx.process({ elem: 'inner' });
+            var inner = ctx.apply({ elem: 'inner' });
             inner.tag.should.equal('span');
             ctx.content(inner);
         });

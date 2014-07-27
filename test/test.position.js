@@ -1,5 +1,3 @@
-/* global describe, it, beforeEach */
-
 var BH = require('..');
 require('should');
 
@@ -39,9 +37,9 @@ describe('ctx.position()', function() {
             '</div>'
         );
     });
-    it('should position for single element is 0', function() {
+    it('should calc position for single element', function() {
         bh.match('button__inner', function(ctx) {
-            ctx.mod('pos', ctx.position().toString());
+            ctx.mod('pos', ctx.position());
         });
         bh.apply({ block: 'button', content: { elem: 'inner' } }).should.equal(
             '<div class="button">' +

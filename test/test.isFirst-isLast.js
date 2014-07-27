@@ -1,5 +1,3 @@
-/* global describe, it, beforeEach */
-
 var BH = require('..');
 require('should');
 
@@ -61,7 +59,7 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
                 ctx.mod('last', 'yes');
             }
         });
-        bh.apply({ block: 'button', content: [{ elem: 'inner' }] }).should.equal(
+        bh.apply({ block: 'button', content: { elem: 'inner' } }).should.equal(
             '<div class="button">' +
             '<div class="button__inner button__inner_first_yes button__inner_last_yes"></div>' +
             '</div>'
@@ -78,14 +76,18 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
             }
         });
         bh.apply([
+            false,
             { block: 'button' },
             {
                 content: [
+                    false,
                     { block: 'button' },
                     { block: 'button' },
-                    { block: 'button' }
+                    { block: 'button' },
+                    [null]
                 ]
-            }
+            },
+            null
         ]).should.equal(
             '<div class="button button_first_yes"></div>' +
             '<div>' +
