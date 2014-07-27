@@ -104,9 +104,9 @@ JSOTBH.prototype.process = function process(json) {
         var result = this.processObject(json);
         this._context.restore();
         return result;
-    } else {
-        return '' + json;
     }
+
+    return '';
 };
 
 JSOTBH.prototype.processObject = function processObject() {
