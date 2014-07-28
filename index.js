@@ -90,12 +90,13 @@ function remove(array, idx) {
 
 JSOTBH.prototype.applyBase = function applyBase() {
     var block = this._context.get('block');
-    var matchers = remove(this._matchers[block], this._current.matcherIdx);
-    var patterns = remove(this._patterns[block], this._current.matcherIdx);
-    this.applyMatchers(
-        matchers,
-        patterns
-    );
+    var object = this._context.get('object');
+    var matchers = remove(this._matchers[block], object.__matcherIdx);
+    var patterns = remove(this._patterns[block], object.__matcherIdx);
+    var result = this.applyMatchers(matchers, patterns);
+    if (result !== object) {
+        this._context.set('object', result);
+    }
     this.stop();
 };
 
@@ -151,13 +152,19 @@ JSOTBH.prototype.processObject = function processObject() {
     }
 
     var matchersForBlock = this._matchers[block];
+
+
+    var object = _object;
     if (matchersForBlock) {
-        this.applyMatchers(matchersForBlock, this._patterns[block]);
+        if (!_object.__matcherIdx) { _object.__matcherIdx = matchersForBlock.length; }
+        object = this.applyMatchers(
+            matchersForBlock,
+            this._patterns[block],
+            _object.__matcherIdx - 1
+        ) || _object;
     }
 
-    var object = this._context.get('object');
     if (_object !== object) {
-        _object.__processed = true;
         object = this._apply(object);
     } else {
         if (object.content !== undefined) {
@@ -171,12 +178,12 @@ JSOTBH.prototype.processObject = function processObject() {
 JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, startFrom) {
     var object = this._context.get('object');
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
-    for (var m = startFrom; m >= 0 ; m--) {
+    for (var m = startFrom; !this._stopFlag && m >= 0 ; m--) {
+        if (m === 0) { object.__processed = true; }
         if (patterns[m](object)) {
-            this._current.matcherIdx = m;
-            var result = matchers[m](this._context.get('object'));
-            if (result) { this._context.set('object', result); }
-            if (this._stopFlag) { break; }
+            object.__matcherIdx = m;
+            var result = matchers[m](object);
+            if (result) { return result; }
         }
     }
     this._stopFlag = false;

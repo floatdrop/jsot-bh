@@ -9,7 +9,8 @@ describe('ctx.content()', function() {
         bh = new BH();
     });
     it('should set right classes in content element', function() {
-        bh.apply({ block: 'button', content: { elem: 'text'} }).should.equal(
+        bh.apply({ block: 'button', content: { elem: 'text' } })
+        .should.equal(
             '<div class="button"><div class="button__text"></div></div>'
         );
     });

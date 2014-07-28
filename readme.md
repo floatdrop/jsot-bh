@@ -4,6 +4,8 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
 
 ## Migration notice
 
+This library is not maintained by BH developers and can't be used as as-is replace for `bh` package. __Use with cautition!__
+
 This library is still not compatible with BH, here list of the known differences:
 
  * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.

@@ -1,3 +1,5 @@
+/* global describe, it, beforeEach */
+
 var BH = require('..');
 require('should');
 
@@ -5,6 +7,19 @@ describe('ctx.apply()', function() {
     var bh;
     beforeEach(function() {
         bh = new BH();
+    });
+    it('should apply mixes to right ctx object', function() {
+        bh.match('button', function(ctx) {
+            ctx.mix({block: 'i-global'});
+        });
+        bh.match('button', function(ctx) {
+            return [
+                ctx.json()
+            ];
+        });
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button i-global"></div>'
+        );
     });
     it('should return valid processed element', function() {
         bh.match('button', function(ctx) {
