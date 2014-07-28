@@ -51,6 +51,8 @@ console.log(
 
 This numbers can be used as "fastest possible" BH performance, but not necessary achivable (`jsot-bh` is lacking some functionality - see API status for details).
 
+While single block/element rendering is much faster, than BH, real-life pages is rendered slower, than BH (by 85%).
+
 ```
 Benchmarking block matching
   jsot#block            x 3,309,461 ops/sec ±1.53% (95 runs sampled)

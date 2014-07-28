@@ -69,6 +69,11 @@ JSOTBH.prototype.toHtml = function toHtml(json) {
 };
 
 JSOTBH.prototype.apply = function apply(json) {
+    /* global BEM */
+    if (typeof BEM !== 'undefined' && typeof BEM.I18N !== 'undefined') {
+        this.lib.i18n = this.lib.i18n || BEM.I18N;
+    }
+
     var result = '';
     if (this.rendering) {
         result = this.process(json);
@@ -84,16 +89,20 @@ JSOTBH.prototype._apply = function _apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
 };
 
-function remove(array, idx) {
-    return array.slice(0, idx).concat(array.slice(idx + 1, array.length));
-}
+// function remove(array, idx) {
+//     return array.slice(0, idx).concat(array.slice(idx + 1, array.length));
+// }
 
 JSOTBH.prototype.applyBase = function applyBase() {
     var block = this._context.get('block');
     var object = this._context.get('object');
-    var matchers = remove(this._matchers[block], object.__matcherIdx);
-    var patterns = remove(this._patterns[block], object.__matcherIdx);
-    var result = this.applyMatchers(matchers, patterns);
+    // var matchers = remove(this._matchers[block], object.__matcherIdx);
+    // var patterns = remove(this._patterns[block], object.__matcherIdx);
+    var result = this.applyMatchers(
+        this._matchers[block],
+        this._patterns[block],
+        object.__matcherIdx - 1
+    );
     if (result !== object) {
         this._context.set('object', result);
     }
@@ -152,7 +161,6 @@ JSOTBH.prototype.processObject = function processObject() {
     }
 
     var matchersForBlock = this._matchers[block];
-
 
     var object = _object;
     if (matchersForBlock) {
