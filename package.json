@@ -39,7 +39,7 @@
     "bemjson-to-html": "^0.2.7",
     "flatit": "^1.0.0",
     "object-match-statement": "^1.0.4",
-    "require-all": "0.0.8",
+    "parse-bem-identifier": "^1.0.0",
     "snap-context": "~1.0.0"
   }
 }

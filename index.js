@@ -2,6 +2,7 @@ var Context = require('snap-context');
 var matcher = require('object-match-statement');
 var flatten = require('flatit');
 var BEMJSON = require('bemjson-to-html');
+var parseBhId = require('parse-bem-identifier');
 var Methods = require('./methods.js');
 
 function JSOTBH() {
@@ -58,7 +59,7 @@ JSOTBH.prototype.match = function match(pattern, callback) {
         return console.error('Pattern should be a string, not a ' + pattern +'. Skipping.');
     }
 
-    var parsedPattern = this.parseBhIdentifier(pattern);
+    var parsedPattern = parseBhId(pattern);
 
     this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || [];
     this._matchers[parsedPattern.block].push(callback.bind(this, this));
@@ -221,30 +222,6 @@ JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     var composedFunction = 'return ' + statement + ';';
     /*jshint -W054*/ /* Yes, this is eval */
     return new Function('object', composedFunction);
-};
-
-JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
-    var result = {};
-
-    var blockElement = pattern.split('__');
-
-    var blockArray = blockElement[0].split('_');
-    result.block = blockArray[0];
-    if (blockArray.length > 1) {
-        result.mods = {};
-        result.mods[blockArray[1]] = blockArray[2] || true;
-    }
-
-    if (blockElement.length > 1) {
-        var elementArray = blockElement[1].split('_');
-        result.elem = elementArray[0];
-        if (elementArray.length > 1) {
-            result.elemMods = {};
-            result.elemMods[elementArray[1]] = elementArray[2] || true;
-        }
-    }
-
-    return result;
 };
 
 Methods.extend(JSOTBH.prototype, Methods);
