@@ -1,6 +1,6 @@
 var Context = require('snap-context');
 var matcher = require('object-match-statement');
-var flatten = require('./flatten.js');
+var flatten = require('flatit');
 var BEMJSON = require('bemjson-to-html');
 var Methods = require('./methods.js');
 
