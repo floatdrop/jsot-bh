@@ -9,12 +9,12 @@ describe('ctx.applyBase()', function() {
     });
 
     it('should apply templates for new mod', function() {
+        bh.match('button_type_span', function(ctx) {
+            ctx.tag('span');
+        });
         bh.match('button', function(ctx) {
             ctx.mod('type', 'span');
             ctx.applyBase();
-        });
-        bh.match('button_type_span', function(ctx) {
-            ctx.tag('span');
         });
         bh.apply({ block: 'button' }).should.equal(
             '<span class="button button_type_span"></span>'

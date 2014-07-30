@@ -161,4 +161,42 @@ Methods.mods = function (values, force) {
     return object.mods;
 };
 
+var lastGenId = 0;
+
+Methods.generateId = function generateId() {
+    lastGenId += 1;
+    return 'uniq' + this._milliseconds + lastGenId;
+};
+
+Methods.isFirst = function isFirts() {
+    return this._current.position === 0 || this._current.position === -1;
+};
+
+Methods.isLast = function isLast() {
+    return this._current.position === this._current.length - 1 || this._current.position === -1;
+};
+
+Methods.json = function json() {
+    return this._context.get('object');
+};
+
+Methods.length = function length() {
+    return this._current.length;
+};
+
+Methods.position = function position() {
+    return this._current.position === -1 ? 1 : this._current.position + 1;
+};
+
+Methods.isSimple = function isSimple(obj) {
+    if (!obj || obj === true) { return true; }
+    var t = typeof obj;
+    return t === 'string' || t === 'number';
+};
+
+Methods.utils = {
+    isSimple: Methods.isSimple
+};
+
+
 module.exports = Methods;

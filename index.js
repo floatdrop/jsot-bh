@@ -4,8 +4,6 @@ var flatten = require('./flatten.js');
 var BEMJSON = require('bemjson-to-html');
 var Methods = require('./methods.js');
 
-var lastGenId = 0;
-
 function JSOTBH() {
     this._options = {
         jsAttrName: 'onclick',
@@ -97,15 +95,9 @@ JSOTBH.prototype._apply = function _apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
 };
 
-// function remove(array, idx) {
-//     return array.slice(0, idx).concat(array.slice(idx + 1, array.length));
-// }
-
 JSOTBH.prototype.applyBase = function applyBase() {
     var block = this._context.get('block');
     var object = this._context.get('object');
-    // var matchers = remove(this._matchers[block], object.__matcherIdx);
-    // var patterns = remove(this._patterns[block], object.__matcherIdx);
     var result = this.applyMatchers(
         this._matchers[block],
         this._patterns[block],
@@ -229,41 +221,6 @@ JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     var composedFunction = 'return ' + statement + ';';
     /*jshint -W054*/ /* Yes, this is eval */
     return new Function('object', composedFunction);
-};
-
-JSOTBH.prototype.generateId = function generateId() {
-    lastGenId += 1;
-    return 'uniq' + this._milliseconds + lastGenId;
-};
-
-JSOTBH.prototype.isFirst = function isFirts() {
-    return this._current.position === 0 || this._current.position === -1;
-};
-
-JSOTBH.prototype.isLast = function isLast() {
-    return this._current.position === this._current.length - 1 || this._current.position === -1;
-};
-
-JSOTBH.prototype.json = function json() {
-    return this._context.get('object');
-};
-
-JSOTBH.prototype.length = function length() {
-    return this._current.length;
-};
-
-JSOTBH.prototype.position = function position() {
-    return this._current.position === -1 ? 1 : this._current.position + 1;
-};
-
-JSOTBH.prototype.isSimple = function isSimple(obj) {
-    if (!obj || obj === true) { return true; }
-    var t = typeof obj;
-    return t === 'string' || t === 'number';
-};
-
-JSOTBH.prototype.utils = {
-    isSimple: JSOTBH.prototype.isSimple
 };
 
 JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
