@@ -1,9 +1,8 @@
-var BEMJSON = require('bemjson-to-html');
-var escape = require('bemjson-to-html/escape.js');
 var Context = require('snap-context');
 var matcher = require('object-match-statement');
 var flatten = require('./flatten.js');
-var extend = require('./extend.js');
+var BEMJSON = require('bemjson-to-html');
+var Methods = require('./methods.js');
 
 var lastGenId = 0;
 
@@ -12,7 +11,7 @@ function JSOTBH() {
         jsAttrName: 'onclick',
     };
 
-    this.bemjson = new BEMJSON(this._options);
+    this.setOptions(this._options);
 
     this._matchers = {};
     this._patterns = {};
@@ -32,6 +31,15 @@ function JSOTBH() {
      */
     this.lib = {};
 }
+
+JSOTBH.prototype.setOptions = function setOptions(_options) {
+    this._options = this.extend(this._options, _options);
+    this.bemjson = new BEMJSON(this._options);
+};
+
+JSOTBH.prototype.getOptions = function getOptions() {
+    return this._options;
+};
 
 JSOTBH.prototype.match = function match(pattern, callback) {
     if (Array.isArray(pattern)) {
@@ -147,6 +155,8 @@ JSOTBH.prototype.process = function process(json) {
     return json;
 };
 
+JSOTBH.prototype.processBemJson = JSOTBH.prototype.process;
+
 JSOTBH.prototype.processObject = function processObject() {
     var block = this._context.get('block');
     var _object = this._context.get('object');
@@ -256,17 +266,6 @@ JSOTBH.prototype.utils = {
     isSimple: JSOTBH.prototype.isSimple
 };
 
-JSOTBH.prototype.setOptions = function setOptions(_options) {
-    this._options = extend(this._options, _options);
-    this.bemjson = new BEMJSON(this._options);
-};
-
-JSOTBH.prototype.getOptions = function getOptions() {
-    return this._options;
-};
-
-JSOTBH.prototype.extend = extend;
-
 JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
     var result = {};
 
@@ -291,168 +290,6 @@ JSOTBH.prototype.parseBhIdentifier = function parseBhIdentifier(pattern) {
     return result;
 };
 
-JSOTBH.prototype.xmlEscape = escape;
-JSOTBH.prototype.attrEscape = escape;
-
-/*
- *
- *  Boilerplate methods (attr attrs bem cls content js param tag mix mod mods)
- *
- */
-
-JSOTBH.prototype.attr = function (key, value, force) {
-    var object = this._context.get('object');
-    object.attrs = object.attrs || {};
-    var prop = object.attrs;
-    if (arguments.length > 1) {
-        prop[key] = !prop.hasOwnProperty(key) || force ? value : prop[key];
-        return this;
-    } else {
-        return prop ? prop[key] : undefined;
-    }
-};
-
-JSOTBH.prototype.attrs = function (values, force) {
-    var object = this._context.get('object');
-    object.attrs = object.attrs || {};
-    if (values !== undefined) {
-        object.attrs = force ? extend(object.attrs, values) : extend(values, object.attrs);
-        return this;
-    }
-
-    return object.attrs;
-};
-
-JSOTBH.prototype.bem = function (value, force) {
-    var object = this._context.get('object');
-    if (arguments.length > 0) {
-        if (force || !object.hasOwnProperty('bem')) {
-            object.bem = value;
-        }
-        return this;
-    }
-
-    return object.bem;
-};
-
-JSOTBH.prototype.cls = function (value, force) {
-    var object = this._context.get('object');
-    if (arguments.length > 0) {
-        if (force || !object.hasOwnProperty('cls')) {
-            object.cls = value;
-        }
-        return this;
-    }
-
-    return object.cls;
-};
-
-JSOTBH.prototype.content = function (value, force) {
-    var object = this._context.get('object');
-    if (arguments.length > 0) {
-        if (force || !object.hasOwnProperty('content')) {
-            object.content = value;
-        }
-        return this;
-    }
-
-    return object.content;
-};
-
-JSOTBH.prototype.js = function (value, force) {
-    var object = this._context.get('object');
-    if (arguments.length > 0) {
-        if (force || !object.hasOwnProperty('js')) {
-            object.js = value;
-        }
-        return this;
-    }
-
-    return object.js;
-};
-
-JSOTBH.prototype.param = function (key, value, force) {
-    var object = this._context.get('object');
-    if (value !== undefined) {
-        object[key] = object[key] === undefined || force ? value : object[key];
-        return this;
-    } else {
-        return object[key];
-    }
-};
-
-JSOTBH.prototype.processBemJson = JSOTBH.prototype.process;
-
-JSOTBH.prototype.tag = function (value, force) {
-    var object = this._context.get('object');
-    if (arguments.length > 0) {
-        if (force || !object.hasOwnProperty('tag')) {
-            object.tag = value;
-        }
-        return this;
-    }
-
-    return object.tag;
-};
-
-function patchMix(mix) {
-    if (Array.isArray(mix)) {
-        for (var i = 0; i < mix.length; i++) {
-            mix[i] = patchMix(mix[i]);
-        }
-        return mix;
-    }
-    if (typeof mix === 'object' && mix.elem && mix.mods) {
-        if (!mix.elemMods) { mix.elemMods = {}; }
-        extend(mix.elemMods, mix.mods);
-    }
-    return mix;
-}
-
-JSOTBH.prototype.mix = function (mix, force) {
-    var object = this._context.get('object');
-    if (mix !== undefined) {
-        mix = patchMix(mix);
-        if (force) {
-            object.mix = mix;
-        } else {
-            if (object.mix) {
-                object.mix = Array.isArray(object.mix) ?
-                    object.mix.concat(mix) :
-                    [object.mix].concat(mix);
-            } else {
-                object.mix = Array.isArray(mix) ? mix : [mix];
-            }
-        }
-        return this;
-    } else {
-        return object.mix;
-    }
-};
-
-JSOTBH.prototype.mod = function (key, value, force) {
-    var object = this._context.get('object');
-    var property = object.elem ? 'elemMods' : 'mods';
-    object[property] = object[property] || {};
-    var prop = object[property];
-    if (arguments.length > 1) {
-        prop[key] = !prop.hasOwnProperty(key) || force ? value : prop[key];
-        return this;
-    } else {
-        return prop ? prop[key] : undefined;
-    }
-};
-
-JSOTBH.prototype.mods = function (values, force) {
-    var object = this._context.get('object');
-    var property = object.elem ? 'elemMods' : 'mods';
-    object[property] = object[property] || {};
-    if (values !== undefined) {
-        object[property] = force ? extend(object[property], values) : extend(values, object.mods);
-        return this;
-    }
-
-    return object.mods;
-};
+Methods.extend(JSOTBH.prototype, Methods);
 
 module.exports = JSOTBH;
