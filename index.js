@@ -83,7 +83,10 @@ JSOTBH.prototype.apply = function apply(json) {
 
     var result = '';
     if (this.rendering) {
+        var _ctx = this._object;
+        passContext(_ctx, json);
         result = this.process(json);
+        this._object = _ctx;
     } else {
         this.rendering = true;
         result = this.bemjson.toHtml(this.process(json), this._options);
@@ -97,15 +100,15 @@ JSOTBH.prototype._apply = function _apply(json) {
 };
 
 JSOTBH.prototype.applyBase = function applyBase() {
-    var block = this._context.get('block');
-    var object = this._context.get('object');
+    var object = this._object;
     var result = this.applyMatchers(
-        this._matchers[block],
-        this._patterns[block],
+        this._matchers[object.block],
+        this._patterns[object.block],
         object.__matcherIdx - 1
     );
-    if (result !== object) {
-        this._context.set('object', result);
+    if (result && result !== object) {
+        passContext(object, result);
+        this._object = result;
     }
     this.stop();
 };
@@ -122,6 +125,17 @@ JSOTBH.prototype.stop = function stop() {
     this._stopFlag = true;
 };
 
+function fixMods(object) {
+    if (object.mods) {
+        if (!object.block && object.elem) {
+            object.elemMods = object.mods;
+        } else {
+            object.blockMods = object.mods;
+        }
+    }
+    return object;
+}
+
 JSOTBH.prototype.process = function process(json) {
     if (typeof json === 'string') {
         return json;
@@ -135,14 +149,8 @@ JSOTBH.prototype.process = function process(json) {
         if (json.__processed) {
             return this.bemjson.toHtml(json);
         }
-        if (json.block) { this._context.set('block', json.block); }
-        if (json.mods) { this._context.set('blockMods', json.mods); }
-
-        this._context.set('object', json);
-        this._context.snapshot();
-        var result = this.processObject(json);
-        this._context.restore();
-        return result;
+        this._object = fixMods(json);
+        return this.processObject();
     }
 
     return json;
@@ -150,44 +158,49 @@ JSOTBH.prototype.process = function process(json) {
 
 JSOTBH.prototype.processBemJson = JSOTBH.prototype.process;
 
+function deepPassContext(host, reciever) {
+    if (Array.isArray(reciever)) {
+        reciever = flatten(reciever);
+    }
+    passContext(host, reciever);
+    return reciever;
+}
+
+function passContext(host, reciever) {
+    if (!reciever.block) { reciever.block = host.block; }
+    if (!reciever.mods) { reciever.mods = host.mods ;}
+    if (!reciever.elem) { reciever.elem = host.elem; }
+    if (!reciever.elemMods) { reciever.elemMods = host.elemMods; }
+    return reciever;
+}
+
 JSOTBH.prototype.processObject = function processObject() {
-    var block = this._context.get('block');
-    var _object = this._context.get('object');
-
-    if (_object.elem && _object.mods) {
-        _object.elemMods = _object.mods;
-    }
-
-    if (!_object.block && _object.elem) {
-        _object.block = this._context.get('block');
-        _object.mods = this._context.get('blockMods');
-    }
-
-    var matchersForBlock = this._matchers[block];
+    var _object = this._object;
+    var matchersForBlock = this._matchers[_object.block];
 
     var object = _object;
     if (matchersForBlock) {
         if (!_object.__matcherIdx) { _object.__matcherIdx = matchersForBlock.length; }
         object = this.applyMatchers(
             matchersForBlock,
-            this._patterns[block],
+            this._patterns[_object.block],
             _object.__matcherIdx - 1
         ) || _object;
     }
 
     if (_object !== object) {
-        object = this._apply(object);
-    } else {
-        if (object.content !== undefined) {
-            object.content = this._apply(object.content);
-        }
+        return this._apply(deepPassContext(_object, object));
+    }
+
+    if (object.content !== undefined) {
+        object.content = this._apply(passContext(_object, object.content));
     }
 
     return object;
 };
 
 JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, startFrom) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
     for (var m = startFrom; !this._stopFlag && m >= 0 ; m--) {
         if (m === 0) { object.__processed = true; }
@@ -200,12 +213,13 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, star
     this._stopFlag = false;
 };
 
-JSOTBH.prototype.processArray = function processArray(array) {
+JSOTBH.prototype.processArray = function processArray(_array) {
     var result = '';
-    array = flatten(array).filter(Boolean);
+    var array = flatten(_array).filter(Boolean);
     for (var i = array.length - 1; i >= 0; i--) {
         this._current.length = array.length;
         this._current.position = i;
+        passContext(_array, array[i]);
         result = this._apply(array[i]) + result;
     }
     this._current.length = -1;
@@ -218,7 +232,6 @@ JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     if (pattern.elem === undefined) {
         statement = 'object.elem === undefined && ' + statement;
     }
-
     var composedFunction = 'return ' + statement + ';';
     /*jshint -W054*/ /* Yes, this is eval */
     return new Function('object', composedFunction);

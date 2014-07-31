@@ -9,7 +9,7 @@ Methods.xmlEscape = escape;
 Methods.attrEscape = escape;
 
 Methods.attr = function (key, value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     object.attrs = object.attrs || {};
     var prop = object.attrs;
     if (arguments.length > 1) {
@@ -21,7 +21,7 @@ Methods.attr = function (key, value, force) {
 };
 
 Methods.attrs = function (values, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     object.attrs = object.attrs || {};
     if (values !== undefined) {
         object.attrs = force ? extend(object.attrs, values) : extend(values, object.attrs);
@@ -32,7 +32,7 @@ Methods.attrs = function (values, force) {
 };
 
 Methods.bem = function (value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (arguments.length > 0) {
         if (force || !object.hasOwnProperty('bem')) {
             object.bem = value;
@@ -44,7 +44,7 @@ Methods.bem = function (value, force) {
 };
 
 Methods.cls = function (value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (arguments.length > 0) {
         if (force || !object.hasOwnProperty('cls')) {
             object.cls = value;
@@ -56,7 +56,7 @@ Methods.cls = function (value, force) {
 };
 
 Methods.content = function (value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (arguments.length > 0) {
         if (force || !object.hasOwnProperty('content')) {
             object.content = value;
@@ -68,7 +68,7 @@ Methods.content = function (value, force) {
 };
 
 Methods.js = function (value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (arguments.length > 0) {
         if (force || !object.hasOwnProperty('js')) {
             object.js = value;
@@ -80,7 +80,7 @@ Methods.js = function (value, force) {
 };
 
 Methods.param = function (key, value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (value !== undefined) {
         object[key] = object[key] === undefined || force ? value : object[key];
         return this;
@@ -90,7 +90,7 @@ Methods.param = function (key, value, force) {
 };
 
 Methods.tag = function (value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (arguments.length > 0) {
         if (force || !object.hasOwnProperty('tag')) {
             object.tag = value;
@@ -116,7 +116,7 @@ function patchMix(mix) {
 }
 
 Methods.mix = function (mix, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     if (mix !== undefined) {
         mix = patchMix(mix);
         if (force) {
@@ -137,7 +137,7 @@ Methods.mix = function (mix, force) {
 };
 
 Methods.mod = function (key, value, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     var property = object.elem ? 'elemMods' : 'mods';
     object[property] = object[property] || {};
     var prop = object[property];
@@ -150,7 +150,7 @@ Methods.mod = function (key, value, force) {
 };
 
 Methods.mods = function (values, force) {
-    var object = this._context.get('object');
+    var object = this._object;
     var property = object.elem ? 'elemMods' : 'mods';
     object[property] = object[property] || {};
     if (values !== undefined) {
@@ -177,7 +177,7 @@ Methods.isLast = function isLast() {
 };
 
 Methods.json = function json() {
-    return this._context.get('object');
+    return this._object;
 };
 
 Methods.length = function length() {

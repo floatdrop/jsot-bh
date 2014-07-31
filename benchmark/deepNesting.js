@@ -20,7 +20,7 @@ matchers(bh);
 
 function construct(obj, depth) {
     if (depth < 100) {
-        obj.content = construct({ block: 'block' },  depth + 1);
+        obj.content = construct({ elem: 'elem' },  depth + 1);
     }
     return obj;
 }
