@@ -73,8 +73,8 @@ Benchmarking element matching
   bt#block__elem        x    65,420 ops/sec ±2.62% (84 runs sampled)
 
 Benchmarking deep bemjsons
-  jsotbh#block x 6,143 ops/sec ±2.25% (90 runs sampled)
-  bh#block     x 8,271 ops/sec ±1.38% (91 runs sampled)
+  jsotbh#block          x 12,648 ops/sec ±4.90% (84 runs sampled)
+  bh#block              x  8,651 ops/sec ±1.43% (90 runs sampled)
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
