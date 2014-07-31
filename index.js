@@ -99,12 +99,17 @@ JSOTBH.prototype._apply = function _apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
 };
 
+function remove(array, idx) {
+    return array.slice(0, idx).concat(array.slice(idx + 1, array.length));
+}
+
 JSOTBH.prototype.applyBase = function applyBase() {
     var object = this._object;
+    var matchers = remove(this._matchers[object.block], object.__matcherIdx);
+    var patterns = remove(this._patterns[object.block], object.__matcherIdx);
     var result = this.applyMatchers(
-        this._matchers[object.block],
-        this._patterns[object.block],
-        object.__matcherIdx - 1
+        matchers,
+        patterns
     );
     if (result && result !== object) {
         passContext(object, result);
@@ -205,6 +210,7 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, star
     for (var m = startFrom; !this._stopFlag && m >= 0 ; m--) {
         if (m === 0) { object.__processed = true; }
         if (patterns[m](object)) {
+            console.log('Applying matcher for ', object.block, object.mods, object.elem, object.elemMods);
             object.__matcherIdx = m;
             var result = matchers[m](object);
             if (result) { return result; }

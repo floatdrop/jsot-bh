@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/floatdrop/jsot-bh",
   "devDependencies": {
+    "bemer": "^0.3.1",
     "benchmark": "^1.0.0",
     "bh": "^2.2.0",
     "coveralls": "^2.7.0",

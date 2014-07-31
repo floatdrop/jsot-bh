@@ -1,5 +1,5 @@
 /* global describe, it, beforeEach */
-var BH = require('..');
+var BH = require('../..');
 require('should');
 
 describe('ctx.applyBase()', function() {

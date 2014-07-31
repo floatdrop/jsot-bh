@@ -2,9 +2,9 @@
 
 var _ = require('lodash');
 var BH = require('bh').BH;
-var JSOTBH = require('..');
+var JSOTBH = require('../..');
 
-describe.skip('elements', function () {
+describe.skip('bemjsons', function () {
     var bh;
     var jsotbh;
 
@@ -15,8 +15,6 @@ describe.skip('elements', function () {
 
     it('popup', function () {
         var bemjson = require('./elements/jsons/popup.json');
-        require('./elements/popup.js')(jsotbh);
-        require('./elements/popup.js')(bh);
         var jsothtml = jsotbh.apply(_.cloneDeep(bemjson));
         var bhhtml = bh.apply(_.cloneDeep(bemjson));
         jsothtml.should.eql(bhhtml);
@@ -24,8 +22,6 @@ describe.skip('elements', function () {
 
     it('promo-page', function () {
         var bemjson = require('./elements/jsons/promo-page.json');
-        require('./elements/promo-page.js')(jsotbh);
-        require('./elements/promo-page.js')(bh);
         var jsothtml = jsotbh.apply(_.cloneDeep(bemjson));
         var bhhtml = bh.apply(_.cloneDeep(bemjson));
         jsothtml.should.eql(bhhtml);

@@ -1,4 +1,4 @@
-var BH = require('..');
+var BH = require('../..');
 require('should');
 
 describe('ctx.isFirst() / ctx.isLast()', function() {
