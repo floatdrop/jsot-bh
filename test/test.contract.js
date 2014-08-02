@@ -15,7 +15,19 @@ describe('bh', function () {
             bh.apply({block: 'block', content: { elem: 'elem' }}).should.eql('<div class="block"><div class="block__elem">Hello</div></div>');
         });
 
-        it('should continue to apply matchers for returned block', function () {
+        it('should continue to apply matchers for returned same block, but wrapped', function () {
+            bh.match('block', function (ctx) { ctx.content('Hello'); });
+            bh.match('block', function (ctx, json) { return [json]; });
+            bh.apply({block: 'block'}).should.eql('<div class="block">Hello</div>');
+        });
+
+        it('should continue to apply matchers for returned same block', function () {
+            bh.match('block', function (ctx) { ctx.content('Hello'); });
+            bh.match('block', function (ctx, json) { return json; });
+            bh.apply({block: 'block'}).should.eql('<div class="block">Hello</div>');
+        });
+
+        it('should continue to apply matchers for returned different block', function () {
             bh.match('block', function () { return { block: 'body' }; });
             bh.match('body', function (ctx) { ctx.content('Hello'); });
             bh.apply({block: 'block'}).should.eql('<div class="body">Hello</div>');

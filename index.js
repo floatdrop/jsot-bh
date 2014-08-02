@@ -54,8 +54,7 @@ JSOTBH.prototype.apply = function apply(json) {
 };
 
 JSOTBH.prototype.applyBase = function applyBase() {
-    var object = this._object;
-    var result = this.applyMatchers(
+    this.applyMatchers(
         this._object,
         this._matchers[this._object.block],
         this._patterns[this._object.block],
@@ -66,20 +65,16 @@ JSOTBH.prototype.applyBase = function applyBase() {
 };
 
 JSOTBH.prototype.process = function process(json) {
+    if (!json) { return json; }
 
-    if (typeof json === 'string') {
-        return json;
-    }
+    while (typeof json !== 'string' && !json.__processed) {
+        if (Array.isArray(json)) {
+            json = this.processArray(json);
+        }
 
-    if (Array.isArray(json)) {
-        return this.processArray(json);
-    }
-
-    if (typeof json === 'object' && json) {
-        while (!json.__processed) {
+        if (typeof json === 'object' && json) {
             json = this.processObject(json) || json;
         }
-        return json;
     }
 
     return json;
