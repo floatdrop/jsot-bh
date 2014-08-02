@@ -11,34 +11,13 @@ function JSOTBH() {
     };
 
     this.setOptions(this._options);
-
     this._matchers = {};
     this._patterns = {};
-
     this._current = { length: -1, position: -1, matcherIdx: -1 };
     this._context = new Context();
-
     this._milliseconds = new Date().getTime().toString();
-
-    /**
-     * Special field for storing shit. Like global. For fuck sake.
-     * ```javascript
-     * bh.lib.objects = bh.lib.objects || {};
-     * bh.lib.objects.inverse = bh.lib.objects.inverse || function(obj) { ... };
-     * ```
-     * @type {Object}
-     */
     this.lib = {};
 }
-
-JSOTBH.prototype.setOptions = function setOptions(_options) {
-    this._options = this.extend(this._options, _options);
-    this.bemjson = new BEMJSON(this._options);
-};
-
-JSOTBH.prototype.getOptions = function getOptions() {
-    return this._options;
-};
 
 JSOTBH.prototype.match = function match(pattern, callback) {
     if (Array.isArray(pattern)) {
@@ -70,78 +49,24 @@ JSOTBH.prototype.match = function match(pattern, callback) {
     return this;
 };
 
-JSOTBH.prototype.toHtml = function toHtml(json) {
-    if (typeof json === 'string') { return json; }
-    return this._apply(json);
-};
-
 JSOTBH.prototype.apply = function apply(json) {
-    /* global BEM */
-    if (typeof BEM !== 'undefined' && typeof BEM.I18N !== 'undefined') {
-        this.lib.i18n = this.lib.i18n || BEM.I18N;
-    }
-
-    var result = '';
-    if (this.rendering) {
-        var _ctx = this._object;
-        passContext(_ctx, json);
-        result = this.process(json);
-        this._object = _ctx;
-    } else {
-        this.rendering = true;
-        result = this.bemjson.toHtml(this.process(json), this._options);
-        this.rendering = false;
-    }
-    return result;
-};
-
-JSOTBH.prototype._apply = function _apply(json) {
     return this.bemjson.toHtml(this.process(json), this._options);
 };
 
-function remove(array, idx) {
-    return array.slice(0, idx).concat(array.slice(idx + 1, array.length));
-}
-
 JSOTBH.prototype.applyBase = function applyBase() {
     var object = this._object;
-    var matchers = remove(this._matchers[object.block], object.__matcherIdx);
-    var patterns = remove(this._patterns[object.block], object.__matcherIdx);
     var result = this.applyMatchers(
-        matchers,
-        patterns
+        this._object,
+        this._matchers[this._object.block],
+        this._patterns[this._object.block],
+        this._object.__matcherIdx - 1
     );
-    if (result && result !== object) {
-        passContext(object, result);
-        this._object = result;
-    }
+
     this.stop();
 };
 
-JSOTBH.prototype.tParam = function tParam(key, value) {
-    if (value) {
-        this._context.set(key, value);
-        return value;
-    }
-    return this._context.get(key);
-};
-
-JSOTBH.prototype.stop = function stop() {
-    this._stopFlag = true;
-};
-
-function fixMods(object) {
-    if (object.mods) {
-        if (!object.block && object.elem) {
-            object.elemMods = object.mods;
-        } else {
-            object.blockMods = object.mods;
-        }
-    }
-    return object;
-}
-
 JSOTBH.prototype.process = function process(json) {
+
     if (typeof json === 'string') {
         return json;
     }
@@ -151,76 +76,57 @@ JSOTBH.prototype.process = function process(json) {
     }
 
     if (typeof json === 'object' && json) {
-        if (json.__processed) {
-            return this.bemjson.toHtml(json);
+        while (!json.__processed) {
+            json = this.processObject(json) || json;
         }
-        this._object = fixMods(json);
-        return this.processObject();
+        return json;
     }
 
     return json;
 };
 
-JSOTBH.prototype.processBemJson = JSOTBH.prototype.process;
+JSOTBH.prototype.processObject = function processObject(object) {
+    var matchersForBlock = this._matchers[object.block];
+    var result = object;
+    if (matchersForBlock) {
+        result = this.applyMatchers(
+            object,
+            matchersForBlock,
+            this._patterns[object.block],
+            object.__matcherIdx ? object.__matcherIdx - 1 : undefined
+        );
 
-function deepPassContext(host, reciever) {
-    if (Array.isArray(reciever)) {
-        reciever = flatten(reciever);
-    }
-    passContext(host, reciever);
-    return reciever;
-}
-
-function passContext(host, reciever) {
-    if (!reciever.block) {
-        reciever.block = host.block;
-        if (!reciever.mods) { reciever.mods = host.mods ;}
-    } else {
-        if (!reciever.elem) {
-            reciever.elem = host.elem;
-            if (!reciever.elemMods) { reciever.elemMods = host.elemMods; }
+        if (object.__matcherIdx === 0) {
+            object.__processed = true;
         }
     }
-    return reciever;
-}
 
-JSOTBH.prototype.processObject = function processObject() {
-    var _object = this._object;
-    var matchersForBlock = this._matchers[_object.block];
-
-    var object = _object;
-    if (matchersForBlock) {
-        if (!_object.__matcherIdx) { _object.__matcherIdx = matchersForBlock.length; }
-        object = this.applyMatchers(
-            matchersForBlock,
-            this._patterns[_object.block],
-            _object.__matcherIdx - 1
-        ) || _object;
+    if (result === object && object.content !== undefined) {
+        object.content = this.apply(object.content);
     }
 
-    if (_object !== object) {
-        return this._apply(deepPassContext(_object, object));
+    if (!matchersForBlock) {
+        object.__processed = true;
     }
 
-    if (object.content !== undefined) {
-        object.content = this._apply(passContext(_object, object.content));
-    }
-
-    return object;
+    return result;
 };
 
-JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, startFrom) {
-    var object = this._object;
+JSOTBH.prototype.applyMatchers = function applyMatchers(object, matchers, patterns, startFrom) {
+    var result;
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
-    for (var m = startFrom; !this._stopFlag && m >= 0 ; m--) {
-        if (m === -1) { object.__processed = true; }
-        object.__matcherIdx = m;
-        if (patterns[m](object)) {
-            var result = matchers[m](object);
-            if (result) { return result; }
+    while (!result && !this._stopFlag && startFrom >= 0) {
+        object.__matcherIdx = startFrom;
+
+        if (patterns[startFrom](object)) {
+            this._object = object;
+            result = matchers[startFrom](object);
         }
+
+        startFrom--;
     }
     this._stopFlag = false;
+    return result || object;
 };
 
 JSOTBH.prototype.processArray = function processArray(_array) {
@@ -229,8 +135,7 @@ JSOTBH.prototype.processArray = function processArray(_array) {
     for (var i = array.length - 1; i >= 0; i--) {
         this._current.length = array.length;
         this._current.position = i;
-        passContext(_array, array[i]);
-        result = this._apply(array[i]) + result;
+        result = this.apply(array[i]) + result;
     }
     this._current.length = -1;
     this._current.position = 0;
@@ -245,6 +150,34 @@ JSOTBH.prototype.compilePattern = function compilePatern(pattern) {
     var composedFunction = 'return ' + statement + ';';
     /*jshint -W054*/ /* Yes, this is eval */
     return new Function('object', composedFunction);
+};
+
+JSOTBH.prototype.setOptions = function setOptions(_options) {
+    this._options = this.extend(this._options, _options);
+    this.bemjson = new BEMJSON(this._options);
+};
+
+JSOTBH.prototype.getOptions = function getOptions() {
+    return this._options;
+};
+
+JSOTBH.prototype.processBemJson = JSOTBH.prototype.process;
+
+JSOTBH.prototype.toHtml = function toHtml(json) {
+    if (typeof json === 'string') { return json; }
+    return this._apply(json);
+};
+
+JSOTBH.prototype.tParam = function tParam(key, value) {
+    if (value) {
+        this._context.set(key, value);
+        return value;
+    }
+    return this._context.get(key);
+};
+
+JSOTBH.prototype.stop = function stop() {
+    this._stopFlag = true;
 };
 
 Methods.extend(JSOTBH.prototype, Methods);

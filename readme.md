@@ -6,11 +6,17 @@ This is modification of [JSOT](https://github.com/floatdrop/jsot) template engin
 
 This library is not maintained by BH developers and can't be used as as-is replace for `bh` package. __Use with cautition!__
 
-This library is still not compatible with BH, here list of the known differences:
+## Matchers
 
- * `ctx.apply` returning compiled string with HTML. Use `ctx.process` for getting `json`.
- * BEM identifier should not contain `\\"` parts, but can contain `"`.
- * Loop detection deprecated.
+`Matcher` - function passed as second argument to `BH.match`. 
+
+It accepts context object with helper methods (which essential just an instance of JSOT-BH) and current processed object as second argument.
+
+It can call `applyBase` method of context object, which applies all matchers to current processed object.  
+
+It can return new object as replacement of current object (useful for wrapping) - which can contain current object in content property or in an arrary.
+
+JSOT-BH will restart apply procedure for returned object until it will be processed with all matchers, that corresponds to this block.
 
 ## API
 
