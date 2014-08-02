@@ -85,6 +85,10 @@ JSOTBH.prototype.process = function process(json) {
     return json;
 };
 
+function passBlock(from, to) {
+    if (!to.block && from.block) { to.block = from.block; }
+}
+
 JSOTBH.prototype.processObject = function processObject(object) {
     var matchersForBlock = this._matchers[object.block];
     var result = object;
@@ -102,6 +106,7 @@ JSOTBH.prototype.processObject = function processObject(object) {
     }
 
     if (result === object && object.content !== undefined) {
+        passBlock(object, object.content);
         object.content = this.apply(object.content);
     }
 
@@ -132,9 +137,11 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(object, matchers, patter
 JSOTBH.prototype.processArray = function processArray(_array) {
     var result = '';
     var array = flatten(_array).filter(Boolean);
+    passBlock(_array, array); // flatten returns new array, so pass block to it
     for (var i = array.length - 1; i >= 0; i--) {
         this._current.length = array.length;
         this._current.position = i;
+        passBlock(array, array[i]);
         result = this.apply(array[i]) + result;
     }
     this._current.length = -1;

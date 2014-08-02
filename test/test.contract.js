@@ -11,7 +11,7 @@ describe('bh', function () {
 
     describe('match', function() {
         it('should match for element in block', function () {
-            bh.match('body__elem', function (ctx) { ctx.content('Hello'); });
+            bh.match('block__elem', function (ctx) { ctx.content('Hello'); });
             bh.apply({block: 'block', content: { elem: 'elem' }}).should.eql('<div class="block"><div class="block__elem">Hello</div></div>');
         });
 
