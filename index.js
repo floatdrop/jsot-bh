@@ -172,10 +172,15 @@ function deepPassContext(host, reciever) {
 }
 
 function passContext(host, reciever) {
-    if (!reciever.block) { reciever.block = host.block; }
-    if (!reciever.mods) { reciever.mods = host.mods ;}
-    if (!reciever.elem) { reciever.elem = host.elem; }
-    if (!reciever.elemMods) { reciever.elemMods = host.elemMods; }
+    if (!reciever.block) {
+        reciever.block = host.block;
+        if (!reciever.mods) { reciever.mods = host.mods ;}
+    } else {
+        if (!reciever.elem) {
+            reciever.elem = host.elem;
+            if (!reciever.elemMods) { reciever.elemMods = host.elemMods; }
+        }
+    }
     return reciever;
 }
 
@@ -208,10 +213,9 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(matchers, patterns, star
     var object = this._object;
     if (startFrom === undefined) { startFrom = matchers.length - 1; }
     for (var m = startFrom; !this._stopFlag && m >= 0 ; m--) {
-        if (m === 0) { object.__processed = true; }
+        if (m === -1) { object.__processed = true; }
+        object.__matcherIdx = m;
         if (patterns[m](object)) {
-            console.log('Applying matcher for ', object.block, object.mods, object.elem, object.elemMods);
-            object.__matcherIdx = m;
             var result = matchers[m](object);
             if (result) { return result; }
         }
