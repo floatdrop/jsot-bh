@@ -1,3 +1,5 @@
+/* global describe, it, beforeEach */
+
 var BH = require('../..');
 require('should');
 

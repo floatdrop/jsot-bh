@@ -21,19 +21,12 @@ var bt = new BT();
 bt.match('block', function (ctx) { ctx.setTag('block'); });
 
 suite
-.add('jsot#block', function() {
-    jsot.apply({ block: 'block' });
-})
 .add('jsotbh#block', function() {
     jsotbh.apply({ block: 'block' });
 })
 .add('bh#block', function() {
     bh.apply({ block: 'block' });
 })
-.add('bt#block', function() {
-    bt.apply({ block: 'block' });
-})
-
 
 .on('cycle', function(event) { benchmarks.add(event.target); })
 .on('complete', function() { benchmarks.log(); })

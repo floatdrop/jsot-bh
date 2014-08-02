@@ -17,10 +17,8 @@ matchers(jsotbh);
 var BH = require('bh').BH;
 var bh = new BH();
 
-var bemer = require('bemer');
-
 function construct(obj, depth) {
-    if (depth < 5) {
+    if (depth < 3) {
         obj.content = [
             construct({ block: 'block' },  depth + 1),
             construct({ block: 'block' },  depth + 1),
@@ -30,16 +28,9 @@ function construct(obj, depth) {
     return obj;
 }
 
-bemer(construct({ block: 'block' }, 0));
-
 suite
-// .add('jsotbh#block', function() {
-//     jsotbh.apply(
-//         construct({ block: 'block' }, 0)
-//     );
-// })
-.add('bemer#block', function() {
-    bemer(
+.add('jsotbh#block', function() {
+    jsotbh.apply(
         construct({ block: 'block' }, 0)
     );
 })

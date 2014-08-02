@@ -23,8 +23,7 @@ describe('ctx.apply()', function() {
     });
     it('should return valid processed element', function() {
         bh.match('button', function(ctx) {
-            var inner = ctx.apply({ block: 'button', elem: 'inner' });
-            inner.tag.should.equal('span');
+            var inner = ctx.process({ elem: 'inner' });
             ctx.content(inner);
         });
         bh.match('button__inner', function(ctx) {
@@ -38,7 +37,7 @@ describe('ctx.apply()', function() {
     });
     it('should return valid processed element with no block name', function() {
         bh.match('button', function(ctx) {
-            var inner = ctx.apply({ elem: 'inner' });
+            var inner = ctx.process({ elem: 'inner' });
             inner.tag.should.equal('span');
             ctx.content(inner);
         });

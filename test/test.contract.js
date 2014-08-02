@@ -10,6 +10,11 @@ describe('bh', function () {
     });
 
     describe('match', function() {
+        it('should restore context after process call', function () {
+            bh.match('block', function (ctx) { ctx.content(ctx.process({ elem: 'wat' })); });
+            bh.apply({block: 'block'}).should.eql('<div class="block"><div class="block__wat"></div></div>');
+        });
+
         it('should match for element in block', function () {
             bh.match('block__elem', function (ctx) { ctx.content('Hello'); });
             bh.apply({block: 'block', content: { elem: 'elem' }}).should.eql('<div class="block"><div class="block__elem">Hello</div></div>');
