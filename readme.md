@@ -61,8 +61,8 @@ While single block/element rendering is much faster, than BH, real-life pages is
 
 ```
 Benchmarking applyBase...
-  jsotbh#block          x 135,141 ops/sec ±1.17% (90 runs sampled)
-  bh#block              x  21,956 ops/sec ±2.35% (86 runs sampled)
+  jsotbh#applyBase      x 135,141 ops/sec ±1.17% (90 runs sampled)
+  bh#applyBase          x  21,956 ops/sec ±2.35% (86 runs sampled)
 
 Benchmarking block matching...
   jsotbh#block          x 1,059,293 ops/sec ±3.61% (93 runs sampled)
