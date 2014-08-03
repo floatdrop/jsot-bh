@@ -141,9 +141,20 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(object, matchers, patter
     return result || object;
 };
 
+function filter(array) {
+    var res = [];
+    for (var i = 0; i < array.length; i++) {
+        var e = array[i];
+        if (e !== false && e !== null && typeof e === 'object') {
+            res.push(e);
+        }
+    }
+    return res;
+}
+
 JSOTBH.prototype.processArray = function processArray(_array) {
     var result = '';
-    var array = flatten(_array).filter(Boolean);
+    var array = filter(flatten(_array));
     passBlock(_array, array); // flatten returns new array, so pass block to it
     for (var i = 0; i < array.length; i++) {
         this._current.length = array.length;
