@@ -16,7 +16,7 @@ function JSOTBH() {
     this._current = { length: -1, position: -1, matcherIdx: -1 };
     this._context = new Context();
     this._milliseconds = new Date().getTime().toString();
-    this.lib = {};
+    this.lib = { i18n: function () { return 'i18n'; }};
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {

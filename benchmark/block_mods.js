@@ -4,10 +4,6 @@ var benchmarks = require('beautify-benchmark');
 
 console.log('Benchmarking block_mod matching...');
 
-var JSOT = require('jsot');
-var jsot = new JSOT();
-jsot.match({ block: 'block', mods: { disabled: 'yes' } }, function () { return '<block disabled="yes"></block>'; });
-
 var JSOTBH = require('..');
 var jsotbh = new JSOTBH();
 jsotbh.match('block_disabled_yes', function (ctx) { ctx.tag('block'); ctx.attr('disabled', 'yes'); });
@@ -15,10 +11,6 @@ jsotbh.match('block_disabled_yes', function (ctx) { ctx.tag('block'); ctx.attr('
 var BH = require('bh').BH;
 var bh = new BH();
 bh.match('block_disabled_yes', function (ctx) { ctx.tag('block'); ctx.attr('disabled', 'yes'); });
-
-var BT = require('enb-bt').BT;
-var bt = new BT();
-bt.match('block_disabled_yes', function (ctx) { ctx.setTag('block'); ctx.setAttr('disabled', 'yes'); });
 
 suite
 .add('jsotbh#block_mod', function() {

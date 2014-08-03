@@ -2,7 +2,7 @@ var Benchmark = require('benchmark');
 var suite = new Benchmark.Suite();
 var benchmarks = require('beautify-benchmark');
 
-console.log('Benchmarking deep bemjsons...');
+console.log('Benchmarking deepArray bemjsons...');
 
 function matchers(bh) {
     bh.match('block', function (ctx) {
@@ -29,12 +29,12 @@ function construct(obj, depth) {
 }
 
 suite
-.add('jsotbh#block', function() {
+.add('jsotbh#deepArray', function() {
     jsotbh.apply(
         construct({ block: 'block' }, 0)
     );
 })
-.add('bh#block', function() {
+.add('bh#deepArray', function() {
     bh.apply(
         construct({ block: 'block' }, 0)
     );

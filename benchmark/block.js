@@ -4,10 +4,6 @@ var benchmarks = require('beautify-benchmark');
 
 console.log('Benchmarking block matching...');
 
-var JSOT = require('jsot');
-var jsot = new JSOT();
-jsot.match({ block: 'block' }, function () { return '<block>' + this.content + '</block>'; });
-
 var JSOTBH = require('..');
 var jsotbh = new JSOTBH();
 jsotbh.match('block', function (ctx) { ctx.tag('block'); });
@@ -15,10 +11,6 @@ jsotbh.match('block', function (ctx) { ctx.tag('block'); });
 var BH = require('bh').BH;
 var bh = new BH();
 bh.match('block', function (ctx) { ctx.tag('block'); });
-
-var BT = require('enb-bt').BT;
-var bt = new BT();
-bt.match('block', function (ctx) { ctx.setTag('block'); });
 
 suite
 .add('jsotbh#block', function() {

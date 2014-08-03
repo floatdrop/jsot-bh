@@ -60,27 +60,29 @@ This numbers can be used as "fastest possible" BH performance, but not necessary
 While single block/element rendering is much faster, than BH, real-life pages is rendered slower, than BH (by 85%).
 
 ```
-Benchmarking block matching
-  jsot#block            x 3,309,461 ops/sec ±1.53% (95 runs sampled)
-  jsotbh#block          x   583,786 ops/sec ±0.87% (89 runs sampled)
-  bh#block              x    59,013 ops/sec ±2.30% (85 runs sampled)
-  bt#block              x    63,434 ops/sec ±2.88% (83 runs sampled)
+Benchmarking applyBase...
+  jsotbh#block x 135,141 ops/sec ±1.17% (90 runs sampled)
+  bh#block     x  21,956 ops/sec ±2.35% (86 runs sampled)
 
-Benchmarking block_mod matching
-  jsot#block_mod        x 4,500,751 ops/sec ±0.72% (95 runs sampled)
-  jsotbh#block_mod      x   330,107 ops/sec ±1.35% (90 runs sampled)
-  bh#block_mod          x    47,605 ops/sec ±2.64% (79 runs sampled)
-  bt#block_mod          x    93,854 ops/sec ±2.92% (87 runs sampled)
+Benchmarking block matching...
+  jsotbh#block x 1,059,293 ops/sec ±3.61% (93 runs sampled)
+  bh#block     x    62,714 ops/sec ±2.20% (88 runs sampled)
 
-Benchmarking element matching
-  jsot#block__elem      x 1,837,856 ops/sec ±0.57% (93 runs sampled)
-  jsotbh#block__elem    x   212,210 ops/sec ±0.88% (89 runs sampled)
-  bh#block__elem        x    43,541 ops/sec ±2.36% (85 runs sampled)
-  bt#block__elem        x    65,420 ops/sec ±2.62% (84 runs sampled)
+Benchmarking block_mod matching...
+  jsotbh#block_mod x 529,408 ops/sec ±0.91% (94 runs sampled)
+  bh#block_mod     x  49,560 ops/sec ±2.65% (80 runs sampled)
 
-Benchmarking deep bemjsons
-  jsotbh#block          x 12,648 ops/sec ±4.90% (84 runs sampled)
-  bh#block              x  8,651 ops/sec ±1.43% (90 runs sampled)
+Benchmarking element matching...
+  jsotbh#block__elem x 212,603 ops/sec ±1.20% (92 runs sampled)
+  bh#block__elem     x  47,530 ops/sec ±2.65% (80 runs sampled)
+
+Benchmarking deep bemjsons...
+  jsotbh#deep x 13,037 ops/sec ±1.39% (91 runs sampled)
+  bh#deep     x 22,534 ops/sec ±1.25% (85 runs sampled)
+
+Benchmarking block wrapping...
+  jsotbh#wrap x 201,079 ops/sec ±1.54% (78 runs sampled)
+  bh#wrap     x  48,531 ops/sec ±3.50% (83 runs sampled)
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
