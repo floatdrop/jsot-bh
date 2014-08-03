@@ -87,6 +87,10 @@ Benchmarking deepArray bemjsons...
 Benchmarking block wrapping...
   jsotbh#wrap           x 201,079 ops/sec ±1.54% (78 runs sampled)
   bh#wrap               x  48,531 ops/sec ±3.50% (83 runs sampled)
+
+Benchmarking multiple matchers...
+  jsotbh#match_elem     x 36,896 ops/sec ±1.48% (88 runs sampled)
+  bh#match_elem         x 73,453 ops/sec ±5.63% (77 runs sampled)
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
