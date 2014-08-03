@@ -2,8 +2,8 @@ var Context = require('snap-context');
 var matcher = require('object-match-statement');
 var flatten = require('flatit');
 var BEMJSON = require('bemjson-to-html');
-var parseBhId = require('parse-bem-identifier');
 var Methods = require('./methods.js');
+var Matchers = require('./matchers.js');
 
 function JSOTBH() {
     this._options = {
@@ -11,12 +11,11 @@ function JSOTBH() {
     };
 
     this.setOptions(this._options);
-    this._matchers = {};
-    this._patterns = {};
+    this._matchers = new Matchers();
     this._current = { length: -1, position: -1, matcherIdx: -1 };
     this._context = new Context();
     this._milliseconds = new Date().getTime().toString();
-    this.lib = { i18n: function () { return 'i18n'; }};
+    this.lib = { i18n: function () { return 'i18n'; }}; // Temp mock
 }
 
 JSOTBH.prototype.match = function match(pattern, callback) {
@@ -38,13 +37,7 @@ JSOTBH.prototype.match = function match(pattern, callback) {
         return console.error('Pattern should be a string, not a ' + pattern +'. Skipping.');
     }
 
-    var parsedPattern = parseBhId(pattern);
-
-    this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || [];
-    this._matchers[parsedPattern.block].push(callback.bind(this, this));
-
-    this._patterns[parsedPattern.block] = this._patterns[parsedPattern.block] || [];
-    this._patterns[parsedPattern.block].push(this.compilePattern(parsedPattern));
+    this._matchers.add(pattern, callback);
 
     return this;
 };
@@ -54,15 +47,8 @@ JSOTBH.prototype.apply = function apply(json) {
 };
 
 JSOTBH.prototype.applyBase = function applyBase() {
-    var result = this.applyMatchers(
-        this._object,
-        this._matchers[this._object.block],
-        this._patterns[this._object.block],
-        this._object.__matcherIdx - 1
-    );
-
+    var result = this.applyMatchers(this._object);
     if (result) { this._object = result; }
-
     this.stop();
 };
 
@@ -96,15 +82,7 @@ function passBlock(from, to) {
 
 JSOTBH.prototype.processObject = function processObject(object) {
     var matchersForBlock = this._matchers[object.block];
-    var result = object;
-    if (matchersForBlock) {
-        result = this.applyMatchers(
-            object,
-            matchersForBlock,
-            this._patterns[object.block],
-            object.__matcherIdx ? object.__matcherIdx - 1 : undefined
-        );
-    }
+    var result = this.applyMatchers(object) || object;
 
     passBlock(object, result);
 
@@ -120,24 +98,26 @@ JSOTBH.prototype.processObject = function processObject(object) {
     return result;
 };
 
-JSOTBH.prototype.applyMatchers = function applyMatchers(object, matchers, patterns, startFrom) {
-    var result;
+JSOTBH.prototype.applyMatchers = function applyMatchers(object, startFrom) {
+    var matchers = this.matchers.get(object);
 
-    if (startFrom === undefined) { startFrom = matchers.length - 1; }
+    if (startFrom === undefined) {
+        startFrom = object.__matcherIdx ? object.__matcherIdx - 1 : matchers.length - 1;
+    }
+
+    var result;
     while (!result && !this._stopFlag && startFrom >= 0) {
         object.__matcherIdx = startFrom;
-
-        if (patterns[startFrom](object)) {
-            this._object = object;
-            result = matchers[startFrom](object);
-        }
-
+        this._object = object;
+        result = matchers[startFrom](object);
         startFrom--;
     }
+
     if (this._stopFlag) {
         this._stopFlag = false;
         this._object.__processed = true;
     }
+
     return result || object;
 };
 
