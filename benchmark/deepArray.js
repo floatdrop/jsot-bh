@@ -16,6 +16,7 @@ matchers(jsotbh);
 
 var BH = require('bh').BH;
 var bh = new BH();
+matchers(bh);
 
 function construct(obj, depth) {
     if (depth < 3) {
