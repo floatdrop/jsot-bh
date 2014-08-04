@@ -57,7 +57,7 @@ console.log(
 
 This numbers can be used as "fastest possible" BH performance, but not necessary achivable (`jsot-bh` is lacking some functionality - see API status for details).
 
-While single block/element rendering is much faster, than BH, real-life pages is rendered slower, than BH (by 7%).
+While single block/element rendering is much faster, than BH, real-life pages is rendered with same speed.
 
 ```
 Benchmarking applyBase...
@@ -89,8 +89,8 @@ Benchmarking block wrapping...
   bh#wrap               x  48,531 ops/sec ±3.50% (83 runs sampled)
 
 Benchmarking multiple matchers...
-  jsotbh#match_elem     x 36,896 ops/sec ±1.48% (88 runs sampled)
-  bh#match_elem         x 73,453 ops/sec ±5.63% (77 runs sampled)
+  jsotbh#match_elem     x 1,615,158 ops/sec ±2.50% (81 runs sampled)
+  bh#match_elem         x    73,314 ops/sec ±7.92% (74 runs sampled)
 ```
 
 [npm-url]: https://npmjs.org/package/jsot-bh
