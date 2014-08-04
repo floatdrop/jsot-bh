@@ -40,11 +40,13 @@ JSOTBH.prototype.match = function match(pattern, callback) {
 
     var parsedPattern = parseBhId(pattern);
 
-    this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || [];
-    this._matchers[parsedPattern.block].push(callback.bind(this, this));
+    this._matchers[parsedPattern.block] = this._matchers[parsedPattern.block] || {};
+    this._matchers[parsedPattern.block][parsedPattern.elem] = this._matchers[parsedPattern.block][parsedPattern.elem] || [];
+    this._matchers[parsedPattern.block][parsedPattern.elem].push(callback.bind(this, this));
 
-    this._patterns[parsedPattern.block] = this._patterns[parsedPattern.block] || [];
-    this._patterns[parsedPattern.block].push(this.compilePattern(parsedPattern));
+    this._patterns[parsedPattern.block] = this._patterns[parsedPattern.block] || {};
+    this._patterns[parsedPattern.block][parsedPattern.elem] = this._patterns[parsedPattern.block][parsedPattern.elem] || [];
+    this._patterns[parsedPattern.block][parsedPattern.elem].push(this.compilePattern(parsedPattern));
 
     return this;
 };
@@ -56,8 +58,8 @@ JSOTBH.prototype.apply = function apply(json) {
 JSOTBH.prototype.applyBase = function applyBase() {
     var result = this.applyMatchers(
         this._object,
-        this._matchers[this._object.block],
-        this._patterns[this._object.block],
+        this._matchers[this._object.block][this._object.elem],
+        this._patterns[this._object.block][this._object.elem],
         this._object.__matcherIdx - 1
     );
 
@@ -95,13 +97,13 @@ function passBlock(from, to) {
 }
 
 JSOTBH.prototype.processObject = function processObject(object) {
-    var matchersForBlock = this._matchers[object.block];
+    var matchersForBlock = this._matchers[object.block] ? this._matchers[object.block][object.elem] : undefined;
     var result = object;
     if (matchersForBlock) {
         result = this.applyMatchers(
             object,
             matchersForBlock,
-            this._patterns[object.block],
+            this._patterns[object.block][object.elem],
             object.__matcherIdx ? object.__matcherIdx - 1 : undefined
         );
     }
