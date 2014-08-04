@@ -75,13 +75,13 @@ function passBlock(from, to) {
     if (!to.block && from.block) {
         to.block = from.block;
         if (!to.mods && from.mods) {
-            to.mods = from.mods; // TODO: should it be deepCopy?
+            to.blockMods = from.mods; // TODO: should it be deepCopy?
         }
     }
 }
 
 JSOTBH.prototype.processObject = function processObject(object) {
-    var matchersForBlock = this._matchers[object.block];
+    var matchersForBlock = this._matchers.get(object);
     var result = this.applyMatchers(object) || object;
 
     passBlock(object, result);
@@ -91,7 +91,7 @@ JSOTBH.prototype.processObject = function processObject(object) {
         object.content = this.apply(object.content);
     }
 
-    if (!matchersForBlock || object.__matcherIdx === 0) {
+    if (matchersForBlock.length === 0 || object.__matcherIdx === 0) {
         object.__processed = true;
     }
 
@@ -99,7 +99,7 @@ JSOTBH.prototype.processObject = function processObject(object) {
 };
 
 JSOTBH.prototype.applyMatchers = function applyMatchers(object, startFrom) {
-    var matchers = this.matchers.get(object);
+    var matchers = this._matchers.get(object);
 
     if (startFrom === undefined) {
         startFrom = object.__matcherIdx ? object.__matcherIdx - 1 : matchers.length - 1;
@@ -109,7 +109,7 @@ JSOTBH.prototype.applyMatchers = function applyMatchers(object, startFrom) {
     while (!result && !this._stopFlag && startFrom >= 0) {
         object.__matcherIdx = startFrom;
         this._object = object;
-        result = matchers[startFrom](object);
+        result = matchers[startFrom].call(this, this, object);
         startFrom--;
     }
 

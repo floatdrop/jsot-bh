@@ -13,8 +13,11 @@ describe.only('Matchers', function () {
     matchers.add('block__elem', 'block__elem');
     matchers.add('block__elem_emod', 'block__elem_emod');
     matchers.add('block__elem_mod', 'block__elem_mod');
+    matchers.add('block_mod__elem', 'block_mod__elem');
     matchers.add('block_mod__elem_emod', 'block_mod__elem_emod');
     matchers.add('block_mod1__elem_emod', 'block_mod1__elem_emod');
+
+   // console.log(require('util').inspect(matchers.matchers, {depth: null}));
 
     it('block', function () {
         matchers.get({block: 'block'}).should.eql(['block']);
@@ -26,7 +29,7 @@ describe.only('Matchers', function () {
     });
 
     it('block_(mod + mod1)', function () {
-        matchers.get({block: 'block', mods: {mod: true, mod1: true}})
+        matchers.get({block: 'block', mods: {mod1: true, mod: true}})
         .should.eql(['block_mod1', 'block_mod', 'block']);
     });
 
@@ -37,17 +40,17 @@ describe.only('Matchers', function () {
 
     it('block__elem', function () {
         matchers.get({block: 'block', elem: 'elem'})
-        .should.eql(['block_elem']);
+        .should.eql(['block__elem']);
     });
 
     it('block__elem_emod', function () {
         matchers.get({block: 'block', elem: 'elem', mods: {emod:true}})
-        .should.eql(['block_elem_emod', 'block_elem']);
+        .should.eql(['block__elem_emod', 'block__elem']);
     });
 
     it('block__elem_mod', function () {
         matchers.get({block: 'block', elem: 'elem', mods: {mod:true}})
-        .should.eql(['block_elem_mod', 'block_elem']);
+        .should.eql(['block__elem_mod', 'block__elem']);
     });
 
     it('block_mod__elem_emod', function () {
